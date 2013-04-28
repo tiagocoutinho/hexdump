@@ -17,12 +17,15 @@ Far Manager
 
 """
 
-__version__ = '0.3dev'
+__version__ = '0.3'
 __author__  = 'anatoly techtonik <techtonik@gmail.com>'
 __license__ = 'Public Domain'
 
 __history__ = \
 """
+0.3 (2013-04-29)
+ * hexdump() is Python 3 compatible
+
 0.2 (2013-04-28)
  * restore() to recover binary data from a hex dump in
    native, Far Manager and Scapy text formats (others
@@ -33,6 +36,7 @@ __history__ = \
  * working hexdump() function for Python 2
 """
 
+import binascii  # binascii is required for Python 3
 import sys
 
 # --- constants
@@ -70,12 +74,17 @@ def hexdump(data):
     [x] data argument as a binary string
     [ ] data argument as an iterable
   '''
+  if PY3K and type(data) == str:
+    raise TypeError('Abstract unicode data (expected bytes)')
+
   line = ''
   for addr, d in enumerate(chunks(data, 16)):
     # 0000000000:
     line = '%010X: ' % (addr*16)
     # 00 00 00 00 00 00 00 00  00 00 00 00 00 00 00 00 
-    dump = ' '.join([b.encode('hex') for b in d]).upper()
+    dump = binascii.hexlify(d).decode('ascii').upper()
+    dump = ' '.join(chunks(dump, 2))
+
     line += dump[:8*3]
     if len(d) > 8:  # insert separator if needed
       line += ' ' + dump[8*3:]
@@ -90,8 +99,10 @@ def hexdump(data):
 
     for byte in d:
       # printable ASCII range 0x20 to 0x7E
-      if 0x20 <= ord(byte) <= 0x7E:
-        line += byte
+      if not PY3K:
+        byte = ord(byte)
+      if 0x20 <= byte <= 0x7E:
+        line += chr(byte)
       else:
         line += '.'
     print(line)
@@ -142,13 +153,13 @@ def restore(dump):
 
 
 if __name__ == '__main__':
-  hexdump('zzzz'*12)
-  hexdump('o'*17)
-  hexdump('p'*24)
-  hexdump('q'*26)
-  hexdump('line\nfeed\r\ntest')
-  hexdump('\x00\x00\x00\x5B\x68\x65\x78\x64\x75\x6D\x70\x5D\x00\x00\x00\x00'
-          '\x00\x11\x22\x33\x44\x55\x66\x77\x88\x99\xAA\xBB\xCC\xDD\xEE\xFF')
+  hexdump(b'zzzz'*12)
+  hexdump(b'o'*17)
+  hexdump(b'p'*24)
+  hexdump(b'q'*26)
+  hexdump(b'line\nfeed\r\ntest')
+  hexdump(b'\x00\x00\x00\x5B\x68\x65\x78\x64\x75\x6D\x70\x5D\x00\x00\x00\x00'
+          b'\x00\x11\x22\x33\x44\x55\x66\x77\x88\x99\xAA\xBB\xCC\xDD\xEE\xFF')
   print('---')
   bin = open('hexfile.bin', 'rb').read()
   hexdump(bin)
