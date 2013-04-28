@@ -59,4 +59,5 @@ def hexdump(data):
       print "%02X" % ord(byte),
     print ''
 
-hexdump('z'*20)
+if __name__ == '__main__':
+  hexdump('zzz'*20)
