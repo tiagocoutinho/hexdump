@@ -56,8 +56,14 @@ def chunks(seq, size):
 
 # --- stuff
 def hexdump(data):
-  # the format is (79 symbols wide)
-  # 0000000000: 00 00 00 00 00 00 00 00  00 00 00 00 00 00 00 00  ................
+  '''
+  Print binary data in the hex dump text format:
+
+  0000000000: 00 00 00 00 00 00 00 00  00 00 00 00 00 00 00 00  ................
+
+    [x] data argument as a binary string
+    [ ] data argument as an iterable
+  '''
   line = ''
   for addr, d in enumerate(chunks(data, 16)):
     # 0000000000:
