@@ -1,10 +1,10 @@
-# -*- coding: latin-1 -*-
 #!/usr/bin/env python
+# -*- coding: latin-1 -*-
 #
-# Dump binary data into the text format:
+# Dump binary data to the following text format:
 #
-# 0000000000: 00 00 00 00 00 00 00 00  00 00 00 00 00 00 00 00  ................
-# 
+# 0000000000: 00 00 00 5B 68 65 78 64  75 6D 70 5D 00 00 00 00  ...[hexdump]....
+# 0000000010: 00 11 22 33 44 55 66 77  88 99 AA BB CC DD EE FF  .."3DUfw........
 #
 # It is similar to the one used by:
 # Scapy
@@ -48,16 +48,38 @@ def chunks(seq, size):
 
 # --- stuff
 def hexdump(data):
-  # the format is (80 symbols wide)
-  # 0000000000:  00 00 00 00 00 00 00 00  00 00 00 00 00 00 00 00  ................
-  output = ''
-  for d in chunks(data, 16):
+  # the format is (79 symbols wide)
+  # 0000000000: 00 00 00 00 00 00 00 00  00 00 00 00 00 00 00 00  ................
+  line = ''
+  for addr, d in enumerate(chunks(data, 16)):
+    # 0000000000:
+    line = '%010X: ' % (addr*16)
+    # 00 00 00 00 00 00 00 00  00 00 00 00 00 00 00 00 
     for byte in d[:8]:
-      print "%02X" % ord(byte),
-    print '',
+      line += '%02X ' % ord(byte)
+    line += ' '
     for byte in d[8:]:
-      print "%02X" % ord(byte),
-    print ''
+      line += '%02X ' % ord(byte)
+    # ................
+    # calculate indentation, which may be different for the last line
+    pad = 1
+    if len(d) < 16:
+      pad += 3*(16 - len(d))
+    line += ' '*pad
+
+    for byte in d:
+      # printable ASCII range 0x20 to 0x7E
+      if 0x20 <= ord(byte) <= 0x7E:
+        line += byte
+      else:
+        line += '.'
+    print line
 
 if __name__ == '__main__':
-  hexdump('zzz'*20)
+  hexdump('zzzz'*12)
+  hexdump('o'*17)
+  hexdump('p'*24)
+  hexdump('q'*26)
+  hexdump('line\nfeed\ntest')
+  hexdump('\x00\x00\x00\x5B\x68\x65\x78\x64\x75\x6D\x70\x5D\x00\x00\x00\x00'
+          '\x00\x11\x22\x33\x44\x55\x66\x77\x88\x99\xAA\xBB\xCC\xDD\xEE\xFF')
