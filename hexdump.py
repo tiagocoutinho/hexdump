@@ -27,6 +27,7 @@ __history__ = \
  * restore() to recover binary data from a hex dump in
    native, Far Manager and Scapy text formats (others
    might work as well)
+ * restore() is Python 3 compatible
 
 0.1 (2013-04-28)
  * working hexdump() function for Python 2
@@ -108,7 +109,7 @@ def restore(dump):
   minhexwidth = 2*16    # minimal width of the hex part - 00000... style
   bytehexwidth = 3*16-1 # min width for a bytewise dump - 00 00 ... style
 
-  result = ''
+  result = bytes() if PY3K else ''
   if type(dump) == str:
     text = dump.strip()  # ignore surrounding empty lines
     for line in text.split('\n'):
@@ -130,7 +131,10 @@ def restore(dump):
           hexdata = line[:bytehexwidth]
 
         # remove spaces and convert
-        result += hexdata.replace(' ', '').decode('hex')
+        if PY3K:
+          result += bytes.fromhex(hexdata)
+        else:
+          result += hexdata.replace(' ', '').decode('hex')
       else:
         raise TypeError('Unknown hexdump format')
   return result

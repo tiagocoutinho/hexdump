@@ -30,12 +30,20 @@ Python 3
 Python 2
 
    >>> import hexdump
-   >>> hexdump.restore(
-   ... '0000000010: 00 11 22 33 44 55 66 77  88 99 AA BB CC DD EE FF  .."3DUfw........'
-   ... )
+   >>> res = hexdump.restore(
+   ... '0000000010: 00 11 22 33 44 55 66 77  88 99 AA BB CC DD EE FF  .."3DUfw........')
+   >>> res
    '\x00\x11"3DUfw\x88\x99\xaa\xbb\xcc\xdd\xee\xff'
-   >>>
+   >>> type(res)
+   <type 'str'>
 
 Python 3
 
-   N/A
+   >>> import hexdump
+   >>> res = hexdump.restore(
+   ... '0000000010: 00 11 22 33 44 55 66 77  88 99 AA BB CC DD EE FF  .."3DUfw........')
+   >>> res
+   b'\x00\x11"3DUfw\x88\x99\xaa\xbb\xcc\xdd\xee\xff'
+   >>> type(res)
+   <class 'bytes'>
+
