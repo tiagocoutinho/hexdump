@@ -10,9 +10,15 @@ Python 2
 Python 3
 
    >>> import hexdump
-   Traceback (most recent call last):
-     File "<stdin>", line 1, in <module>
-     File ".\hexdump.py", line 76
-       print line
-                ^
-   SyntaxError: invalid syntax
+   >>> hexdump.hexdump('\x00'*16)
+   0000000000: 00 00 00 00 00 00 00 00  00 00 00 00 00 00 00 00  ................
+
+   ^ this one is actually wrong, the data that is read a binary
+     file is `bytes`, not `string' as here, so there is an
+     information loss when such string is dumped
+
+  [ ] investigate why no error is shown when writing UTF-8 text
+      and data loss occurs
+  [ ] provide an explanation why Python 3 strings can not be
+      dumped (they are abstract unicode) and how to convert
+      them to binary

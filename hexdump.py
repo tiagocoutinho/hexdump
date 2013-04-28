@@ -73,7 +73,7 @@ def hexdump(data):
         line += byte
       else:
         line += '.'
-    print line
+    print(line)
 
 if __name__ == '__main__':
   hexdump('zzzz'*12)
