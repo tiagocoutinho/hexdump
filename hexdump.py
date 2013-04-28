@@ -103,7 +103,7 @@ def restore(dump):
 
   Supported formats:
     [x] hexdump.hexdump
-    [ ] Scapy
+    [x] Scapy
     [x] Far Manager
   '''
   minhexwidth = 2*16    # minimal width of the hex part - 00000... style
