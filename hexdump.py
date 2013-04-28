@@ -17,7 +17,7 @@ Far Manager
 
 """
 
-__version__ = '0.2'
+__version__ = '0.3dev'
 __author__  = 'anatoly techtonik <techtonik@gmail.com>'
 __license__ = 'Public Domain'
 
@@ -75,16 +75,17 @@ def hexdump(data):
     # 0000000000:
     line = '%010X: ' % (addr*16)
     # 00 00 00 00 00 00 00 00  00 00 00 00 00 00 00 00 
-    for byte in d[:8]:
-      line += '%02X ' % ord(byte)
-    line += ' '
-    for byte in d[8:]:
-      line += '%02X ' % ord(byte)
+    dump = ' '.join([b.encode('hex') for b in d]).upper()
+    line += dump[:8*3]
+    if len(d) > 8:  # insert separator if needed
+      line += ' ' + dump[8*3:]
     # ................
     # calculate indentation, which may be different for the last line
-    pad = 1
+    pad = 2
     if len(d) < 16:
       pad += 3*(16 - len(d))
+    if len(d) <= 8:
+      pad += 1
     line += ' '*pad
 
     for byte in d:
