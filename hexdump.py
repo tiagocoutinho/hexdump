@@ -56,7 +56,7 @@ def chunks(seq, size):
   ''' 
   d, m = divmod(len(seq), size)
   for i in range(d):
-    yield [seq[i*size+n] for n in range(size)] 
+    yield seq[i*size:(i+1)*size]
   if m: 
     yield seq[d*size:] 
 
