@@ -1,3 +1,10 @@
+Cross-platform Python 2/3 library to dump and restore
+binary data to and from hex form.
+
+Placed into public domain
+by anatoly techtonik <tectonik@gmail.com>
+
+
 01 - dump binary data string
 ============================
 
@@ -44,4 +51,11 @@ Python 3
    b'\x00\x11"3DUfw\x88\x99\xaa\xbb\xcc\xdd\xee\xff'
    >>> type(res)
    <class 'bytes'>
+
+
+---[release checklist]---
+
+| [ ] update version in hexedit.py
+| [ ] update ChangeLog in setup.py from hexedit.py
+| [ ] python setup.py register sdist upload
 

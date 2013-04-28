@@ -24,7 +24,7 @@ __license__ = 'Public Domain'
 __history__ = \
 """
 0.3 (2013-04-29)
- * hexdump() is Python 3 compatible
+ * fully Python 3 compatible
 
 0.2 (2013-04-28)
  * restore() to recover binary data from a hex dump in
