@@ -22,3 +22,20 @@ Python 3
   [ ] provide an explanation why Python 3 strings can not be
       dumped (they are abstract unicode) and how to convert
       them to binary
+
+
+02 - restore binary data from hex dump string
+==============================================
+
+Python 2
+
+   >>> import hexdump
+   >>> hexdump.restore(
+   ... '0000000010: 00 11 22 33 44 55 66 77  88 99 AA BB CC DD EE FF  .."3DUfw........'
+   ... )
+   '\x00\x11"3DUfw\x88\x99\xaa\xbb\xcc\xdd\xee\xff'
+   >>>
+
+Python 3
+
+   N/A
