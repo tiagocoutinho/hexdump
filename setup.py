@@ -4,7 +4,7 @@ from distutils.core import setup
 def get_version(relpath):
     """read version info from file without importing it"""
     from os.path import dirname, join
-    for line in open(join(dirname(__file__), relpath), encoding = 'cp1252'):
+    for line in open(join(dirname(__file__), relpath), encoding='cp1252'):
         if '__version__' in line:
             if '"' in line:
                 # __version__ = "0.9"
