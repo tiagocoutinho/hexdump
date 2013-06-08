@@ -8,13 +8,13 @@ by anatoly techtonik <techtonik@gmail.com>
 01 - dump binary data string
 ============================
 
-Python 2
+Python 2::
 
     >>> import hexdump
     >>> hexdump.hexdump('\x00'*16)
     0000000000: 00 00 00 00 00 00 00 00  00 00 00 00 00 00 00 00  ................
 
-Python 3
+Python 3::
 
    >>> import hexdump
    >>> hexdump.hexdump('\x00'*16)
@@ -23,16 +23,16 @@ Python 3
    >>> hexdump.hexdump(b'\x00'*16)
    0000000000: 00 00 00 00 00 00 00 00  00 00 00 00 00 00 00 00  ................
  
-   Python 3 strings are arrays of abstract indexes in unicode
-   table. Single index is an integer which takes more than one
-   byte when stored, so you need to specify exactly how to store
-   these bytes with encoding.
+Python 3 strings are arrays of abstract indexes in unicode
+table. Single index is an integer which takes more than one
+byte when stored, so you need to specify exactly how to store
+these bytes with encoding.
 
 
 02 - restore binary data from hex dump string
 ==============================================
 
-Python 2
+Python 2::
 
    >>> import hexdump
    >>> res = hexdump.restore(
@@ -42,7 +42,7 @@ Python 2
    >>> type(res)
    <type 'str'>
 
-Python 3
+Python 3::
 
    >>> import hexdump
    >>> res = hexdump.restore(
@@ -55,7 +55,7 @@ Python 3
 
 ---[release checklist]---
 
-| [ ] update version in hexedit.py
-| [ ] update ChangeLog in setup.py from hexedit.py
+| [ ] update version in hexdump.py
+| [ ] update ChangeLog in setup.py from hexdump.py
 | [ ] python setup.py register sdist upload
 
