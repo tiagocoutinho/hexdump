@@ -4,7 +4,13 @@ from distutils.core import setup
 def get_version(relpath):
     """read version info from file without importing it"""
     from os.path import dirname, join
-    for line in open(join(dirname(__file__), relpath), encoding='cp1252'):
+    # Below is a hack to read text file with cp1252 characters
+    # in Python2/3 compatible way. Reading this text file
+    # without specifying encoding will fail in Python 3 on some
+    # systems (see http://goo.gl/5XmOH). Specifying encoding as
+    # as open() parameter is incompatible with Python 2
+    for line in open(join(dirname(__file__), relpath), 'rb'):
+        line = line.decode('cp1252')
         if '__version__' in line:
             if '"' in line:
                 # __version__ = "0.9"
@@ -36,6 +42,10 @@ setup(
     long_description= """
 ChangeLog
 =========
+0.4 (2013-06-09)
+ * fix installation with Python 3 for non English
+   versions of Windows, thanks to George Schizas
+
 0.3 (2013-04-29)
  * fully Python 3 compatible
 
