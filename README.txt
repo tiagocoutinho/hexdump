@@ -2,7 +2,7 @@ Cross-platform Python 2/3 library to dump and restore
 binary data to and from hex form.
 
 Placed into public domain
-by anatoly techtonik <tectonik@gmail.com>
+by anatoly techtonik <techtonik@gmail.com>
 
 
 01 - dump binary data string
@@ -10,9 +10,9 @@ by anatoly techtonik <tectonik@gmail.com>
 
 Python 2
 
-   >>> import hexdump
-   >>> hexdump.hexdump('\x00'*16)
-   0000000000: 00 00 00 00 00 00 00 00  00 00 00 00 00 00 00 00  ................
+    >>> import hexdump
+    >>> hexdump.hexdump('\x00'*16)
+    0000000000: 00 00 00 00 00 00 00 00  00 00 00 00 00 00 00 00  ................
 
 Python 3
 
