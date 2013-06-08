@@ -17,12 +17,16 @@ Far Manager
 
 """
 
-__version__ = '0.3'
+__version__ = '0.4'
 __author__  = 'anatoly techtonik <techtonik@gmail.com>'
 __license__ = 'Public Domain'
 
 __history__ = \
 """
+0.4 (2013-06-09)
+ * fix installation with Python 3 for non English
+   versions of Windows, thanks to George Schizas
+
 0.3 (2013-04-29)
  * fully Python 3 compatible
 

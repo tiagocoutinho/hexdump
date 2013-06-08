@@ -56,6 +56,7 @@ Python 3::
 ---[release checklist]---
 
 | [ ] update version in hexdump.py
+| [x] update version in setup.py
 | [ ] update ChangeLog in setup.py from hexdump.py
 | [ ] python setup.py register sdist upload
 
