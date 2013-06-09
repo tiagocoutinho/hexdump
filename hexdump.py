@@ -17,7 +17,7 @@ Far Manager
 
 """
 
-__version__ = '0.4'
+__version__ = '0.5dev'
 __author__  = 'anatoly techtonik <techtonik@gmail.com>'
 __license__ = 'Public Domain'
 
@@ -156,7 +156,12 @@ def restore(dump):
   return result
 
 
-if __name__ == '__main__':
+def runtest():
+  '''Run hexdump tests. Requires hexfile.bin to be in the same
+     directory as hexdump.py itself'''
+  import os
+  hexfile = os.path.dirname(__file__) + '/hexfile.bin' 
+
   hexdump(b'zzzz'*12)
   hexdump(b'o'*17)
   hexdump(b'p'*24)
@@ -165,7 +170,7 @@ if __name__ == '__main__':
   hexdump(b'\x00\x00\x00\x5B\x68\x65\x78\x64\x75\x6D\x70\x5D\x00\x00\x00\x00'
           b'\x00\x11\x22\x33\x44\x55\x66\x77\x88\x99\xAA\xBB\xCC\xDD\xEE\xFF')
   print('---')
-  bin = open('hexfile.bin', 'rb').read()
+  bin = open(hexfile, 'rb').read()
   hexdump(bin)
   bindata = restore(
 '''
@@ -193,3 +198,7 @@ if __name__ == '__main__':
     print('restore scapy format check passed')
   else:
     raise
+
+
+if __name__ == '__main__':
+  runtest()
