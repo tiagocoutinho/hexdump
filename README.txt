@@ -53,6 +53,15 @@ Python 3::
    <class 'bytes'>
 
 
+03 - command line tool to dump file contents
+============================================
+::
+
+   $ python -m hexdump hexfile.bin
+   0000000000: 00 00 00 5B 68 65 78 64  75 6D 70 5D 00 00 00 00  ...[hexdump]....
+   0000000010: 00 11 22 33 44 55 66 77  88 99 AA BB CC DD EE FF  .."3DUfw........
+
+
 ---[release checklist]---
 
 | [ ] update version in hexdump.py

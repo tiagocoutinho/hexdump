@@ -201,4 +201,20 @@ def runtest():
 
 
 if __name__ == '__main__':
-  runtest()
+  from optparse import OptionParser
+  parser = OptionParser(usage='%prog [binfile]')
+  parser.add_option('--test', action='store_true', help='run hexdump sanity checks')
+
+  options, args = parser.parse_args()
+  if not args or (args and options.test):
+    parser.print_help()
+    sys.exit(-1)
+
+  if options.test: 
+    runtest()
+  else:
+    # [ ] memory effective dump 
+    hexdump(open(args[0], 'rb').read())
+
+# [ ] file restore from command line utility
+    
