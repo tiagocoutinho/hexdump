@@ -206,12 +206,17 @@ if __name__ == '__main__':
   parser.add_option('--test', action='store_true', help='run hexdump sanity checks')
 
   options, args = parser.parse_args()
-  if not args or (args and options.test):
+
+  if args:
+    if options.test:
+      parser.print_help()
+      sys.exit(-1)
+
+  if options.test:
+    runtest()
+  elif not args:
     parser.print_help()
     sys.exit(-1)
-
-  if options.test: 
-    runtest()
   else:
     # [ ] memory effective dump 
     hexdump(open(args[0], 'rb').read())
