@@ -50,6 +50,10 @@ setup(
     long_description= """
 ChangeLog
 =========
+0.5 (2013-06-10)
+ * hexdump is now also a command line utility (no
+   restore yet)
+
 0.4 (2013-06-09)
  * fix installation with Python 3 for non English
    versions of Windows, thanks to George Schizas
