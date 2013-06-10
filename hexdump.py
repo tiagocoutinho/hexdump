@@ -55,9 +55,9 @@ def int2byte(i):
     return chr(i)
 
 def chunks(seq, size): 
-  '''Cut sequence into chunks of given size. If `seq` length is 
-     not divisible by `size` without reminder, last chunk will 
-     have length less than size. 
+  '''Generator that cuts sequence into chunks of given size.
+     If `seq` length is not multiply of `size`, the lengh of
+     the last chunk returned will be less than requested.
 
      >>> list( chunks([1,2,3,4,5,6,7], 3) ) 
      [[1, 2, 3], [4, 5, 6], [7]] 
@@ -68,6 +68,14 @@ def chunks(seq, size):
   if m: 
     yield seq[d*size:] 
 
+def chunkread(f, size):
+  '''Generator that reads file in chunks. May return less data
+     than requested on the last read.'''
+  c = f.read(size)
+  while len(c):
+    yield c
+    c = f.read(size)
+
 # --- stuff
 def hexdump(data):
   '''
@@ -76,13 +84,18 @@ def hexdump(data):
   0000000000: 00 00 00 00 00 00 00 00  00 00 00 00 00 00 00 00  ................
 
     [x] data argument as a binary string
-    [ ] data argument as an iterable
+    [x] data argument as a file like object
   '''
   if PY3K and type(data) == str:
     raise TypeError('Abstract unicode data (expected bytes)')
 
+  if hasattr(data, 'read'):
+    chunfunk = chunkread
+  else:
+    chunfunk = chunks
+
   line = ''
-  for addr, d in enumerate(chunks(data, 16)):
+  for addr, d in enumerate(chunfunk(data, 16)):
     # 0000000000:
     line = '%010X: ' % (addr*16)
     # 00 00 00 00 00 00 00 00  00 00 00 00 00 00 00 00 
@@ -198,6 +211,8 @@ def runtest():
     print('restore scapy format check passed')
   else:
     raise
+  print('---')
+  hexdump(open(hexfile, 'rb'))
 
 
 if __name__ == '__main__':
@@ -218,8 +233,8 @@ if __name__ == '__main__':
     parser.print_help()
     sys.exit(-1)
   else:
-    # [ ] memory effective dump 
-    hexdump(open(args[0], 'rb').read())
+    # [x] memory effective dump 
+    hexdump(open(args[0], 'rb'))
 
 # [ ] file restore from command line utility
     
