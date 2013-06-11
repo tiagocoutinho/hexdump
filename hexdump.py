@@ -81,14 +81,27 @@ def chunkread(f, size):
     c = f.read(size)
 
 # --- stuff
-def hexdump(data):
+def dumpgen(binary):
   '''
-  Print binary data in the hex dump text format:
+  Generator that accepts `binary` bytes (Python 3) or
+  str (Python 2) iterable and produces hex string out
+  of it'''
+  pass 
+  
+
+def hexdump(data, result='print'):
+  '''
+  Transform binary data to the hex dump text format:
 
   0000000000: 00 00 00 00 00 00 00 00  00 00 00 00 00 00 00 00  ................
 
     [x] data argument as a binary string
     [x] data argument as a file like object
+
+  Returns result depending on the `result` argument:
+    'print'     - prints line by line
+    'return'    - returns single string
+    'generator' - returns generator that produces lines
   '''
   if PY3K and type(data) == str:
     raise TypeError('Abstract unicode data (expected bytes)')
@@ -98,7 +111,7 @@ def hexdump(data):
   else:
     chunfunk = chunks
 
-  line = ''
+  textlist = []
   for addr, d in enumerate(chunfunk(data, 16)):
     # 0000000000:
     line = '%010X: ' % (addr*16)
@@ -126,7 +139,17 @@ def hexdump(data):
         line += chr(byte)
       else:
         line += '.'
-    print(line)
+    if result == 'print':
+      print(line)
+    elif result == 'generator':
+      yield line
+    elif result == 'return':
+      textlist.append(line)
+    else:
+      raise ValueError('Unknown value of `result` argument')
+  if result == 'return':
+    return '\n'.join(textlist)
+  
 
 def restore(dump):
   '''
