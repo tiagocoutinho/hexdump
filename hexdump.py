@@ -17,7 +17,7 @@ Far Manager
 
 """
 
-__version__ = '0.5'
+__version__ = '0.6dev'
 __author__  = 'anatoly techtonik <techtonik@gmail.com>'
 __license__ = 'Public Domain'
 
@@ -58,10 +58,12 @@ def int2byte(i):
   else:
     return chr(i)
 
+# --- - chunking helpers
 def chunks(seq, size): 
-  '''Generator that cuts sequence into chunks of given size.
-     If `seq` length is not multiply of `size`, the lengh of
-     the last chunk returned will be less than requested.
+  '''Generator that cuts sequence (bytes, memoryview, etc.)
+     into chunks of given size. If `seq` length is not multiply
+     of `size`, the lengh of the last chunk returned will be
+     less than requested.
 
      >>> list( chunks([1,2,3,4,5,6,7], 3) ) 
      [[1, 2, 3], [4, 5, 6], [7]] 
@@ -70,58 +72,46 @@ def chunks(seq, size):
   for i in range(d):
     yield seq[i*size:(i+1)*size]
   if m: 
-    yield seq[d*size:] 
+    yield seq[d*size:]
 
 def chunkread(f, size):
-  '''Generator that reads file in chunks. May return less data
-     than requested on the last read.'''
+  '''Generator that reads from file like object. May return less
+     data than requested on the last read.'''
   c = f.read(size)
   while len(c):
     yield c
     c = f.read(size)
 
-# --- stuff
-def dumpgen(binary):
-  '''
-  Generator that accepts `binary` bytes (Python 3) or
-  str (Python 2) iterable and produces hex string out
-  of it'''
-  pass 
-  
-
-def hexdump(data, result='print'):
-  '''
-  Transform binary data to the hex dump text format:
-
-  0000000000: 00 00 00 00 00 00 00 00  00 00 00 00 00 00 00 00  ................
-
-    [x] data argument as a binary string
-    [x] data argument as a file like object
-
-  Returns result depending on the `result` argument:
-    'print'     - prints line by line
-    'return'    - returns single string
-    'generator' - returns generator that produces lines
-  '''
-  if PY3K and type(data) == str:
-    raise TypeError('Abstract unicode data (expected bytes)')
-
-  if hasattr(data, 'read'):
-    chunfunk = chunkread
+def genchunks(mixed, size):
+  '''Generator to chunk binary sequences or file like objects.
+     The size of the last chunk returned may be less than
+     requested.'''
+  if hasattr(mixed, 'read'):
+    return chunkread(mixed, size)
   else:
-    chunfunk = chunks
+    return chunks(mixed, size)
+# --- - /chunking helpers
 
-  textlist = []
-  for addr, d in enumerate(chunfunk(data, 16)):
+# --- hex stuff
+def dump(binary):
+  '''
+  Convert `binary` bytes (Python 3) or str (Python 2) to
+  hex string:
+
+  00 00 00 00 00 00 00 00 00 00 00 ...
+  '''
+  hexstr = binascii.hexlify(binary).decode('ascii').upper()
+  return ' '.join(chunks(hexstr, 2))
+
+def dumpgen(data):
+  for addr, d in enumerate(genchunks(data, 16)):
     # 0000000000:
     line = '%010X: ' % (addr*16)
     # 00 00 00 00 00 00 00 00  00 00 00 00 00 00 00 00 
-    dump = binascii.hexlify(d).decode('ascii').upper()
-    dump = ' '.join(chunks(dump, 2))
-
-    line += dump[:8*3]
+    dumpstr = dump(d)
+    line += dumpstr[:8*3]
     if len(d) > 8:  # insert separator if needed
-      line += ' ' + dump[8*3:]
+      line += ' ' + dumpstr[8*3:]
     # ................
     # calculate indentation, which may be different for the last line
     pad = 2
@@ -139,17 +129,35 @@ def hexdump(data, result='print'):
         line += chr(byte)
       else:
         line += '.'
-    if result == 'print':
-      print(line)
-    elif result == 'generator':
-      yield line
-    elif result == 'return':
-      textlist.append(line)
-    else:
-      raise ValueError('Unknown value of `result` argument')
-  if result == 'return':
-    return '\n'.join(textlist)
+    yield line
   
+def hexdump(data, result='print'):
+  '''
+  Transform binary data to the hex dump text format:
+
+  0000000000: 00 00 00 00 00 00 00 00  00 00 00 00 00 00 00 00  ................
+
+    [x] data argument as a binary string
+    [x] data argument as a file like object
+
+  Returns result depending on the `result` argument:
+    'print'     - prints line by line
+    'return'    - returns single string
+    'generator' - returns generator that produces lines
+  '''
+  if PY3K and type(data) == str:
+    raise TypeError('Abstract unicode data (expected bytes sequence)')
+
+  gen = dumpgen(data)
+  if result == 'generator':
+    return gen
+  elif result == 'return':
+    return '\n'.join(gen)
+  elif result == 'print':
+    for line in gen:
+      print(line)
+  else:
+    raise ValueError('Unknown value of `result` argument')
 
 def restore(dump):
   '''
@@ -199,8 +207,8 @@ def restore(dump):
 def runtest():
   '''Run hexdump tests. Requires hexfile.bin to be in the same
      directory as hexdump.py itself'''
-  import os
-  hexfile = os.path.dirname(__file__) + '/hexfile.bin' 
+  import os.path as osp
+  hexfile = osp.dirname(osp.abspath(__file__)) + '/hexfile.bin' 
 
   hexdump(b'zzzz'*12)
   hexdump(b'o'*17)
