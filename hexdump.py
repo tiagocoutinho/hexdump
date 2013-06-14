@@ -104,7 +104,13 @@ def dump(binary):
   return ' '.join(chunks(hexstr, 2))
 
 def dumpgen(data):
-  for addr, d in enumerate(genchunks(data, 16)):
+  '''
+  Generator that produces strings:
+
+  '0000000000: 00 00 00 00 00 00 00 00  00 00 00 00 00 00 00 00  ................'
+  '''
+  generator = genchunks(data, 16)
+  for addr, d in enumerate(generator):
     # 0000000000:
     line = '%010X: ' % (addr*16)
     # 00 00 00 00 00 00 00 00  00 00 00 00 00 00 00 00 
@@ -210,16 +216,28 @@ def runtest():
   import os.path as osp
   hexfile = osp.dirname(osp.abspath(__file__)) + '/hexfile.bin' 
 
+  # varios length of input data
   hexdump(b'zzzz'*12)
   hexdump(b'o'*17)
   hexdump(b'p'*24)
   hexdump(b'q'*26)
+  # allowable character set filter
   hexdump(b'line\nfeed\r\ntest')
   hexdump(b'\x00\x00\x00\x5B\x68\x65\x78\x64\x75\x6D\x70\x5D\x00\x00\x00\x00'
           b'\x00\x11\x22\x33\x44\x55\x66\x77\x88\x99\xAA\xBB\xCC\xDD\xEE\xFF')
   print('---')
   bin = open(hexfile, 'rb').read()
+  # dumping file-like binary object to screen (default behavior)
   hexdump(bin)
+  print('-- returned output')
+  hexout = hexdump(bin, result='return')
+  print(hexout)
+  print('-- returned generator')
+  hexgen = hexdump(bin, result='generator')
+  print(next(hexgen))
+  print(next(hexgen))
+
+  # binary restore test
   bindata = restore(
 '''
 0000000000: 00 00 00 5B 68 65 78 64  75 6D 70 5D 00 00 00 00  ...[hexdump]....
@@ -272,4 +290,4 @@ if __name__ == '__main__':
     hexdump(open(args[0], 'rb'))
 
 # [ ] file restore from command line utility
-    
+# [ ] encoding param for hexdump()ing Python 3 str if anybody requests that
