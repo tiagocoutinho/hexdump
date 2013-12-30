@@ -302,3 +302,6 @@ if __name__ == '__main__':
 
 # [ ] file restore from command line utility
 # [ ] encoding param for hexdump()ing Python 3 str if anybody requests that
+
+# [ ] document chunking API
+# [ ] document hexdump API
