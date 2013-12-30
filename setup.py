@@ -50,6 +50,17 @@ setup(
     long_description= """
 ChangeLog
 =========
+1.0 (2013-12-30)
+ * length of address is reduced from 10 to 8
+ * hexdump() got new 'result' keyword argument, it
+   can be either 'print', 'generator' or 'return'
+ * actual dumping logic is not in new dumpgen()
+   generator function
+ * new dump(binary) function that takes binary data
+   and returns string like "66 6F 72 6D 61 74"
+ * new genchunks(mixed, size) function that chunks
+   both sequences and file like objects
+
 0.5 (2013-06-10)
  * hexdump is now also a command line utility (no
    restore yet)
