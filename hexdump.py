@@ -3,8 +3,8 @@
 """
 Dump binary data to the following text format:
 
-0000000000: 00 00 00 5B 68 65 78 64  75 6D 70 5D 00 00 00 00  ...[hexdump]....
-0000000010: 00 11 22 33 44 55 66 77  88 99 AA BB CC DD EE FF  .."3DUfw........
+00000000: 00 00 00 5B 68 65 78 64  75 6D 70 5D 00 00 00 00  ...[hexdump]....
+00000010: 00 11 22 33 44 55 66 77  88 99 AA BB CC DD EE FF  .."3DUfw........
 
 It is similar to the one used by:
 Scapy
@@ -107,12 +107,12 @@ def dumpgen(data):
   '''
   Generator that produces strings:
 
-  '0000000000: 00 00 00 00 00 00 00 00  00 00 00 00 00 00 00 00  ................'
+  '00000000: 00 00 00 00 00 00 00 00  00 00 00 00 00 00 00 00  ................'
   '''
   generator = genchunks(data, 16)
   for addr, d in enumerate(generator):
-    # 0000000000:
-    line = '%010X: ' % (addr*16)
+    # 00000000:
+    line = '%08X: ' % (addr*16)
     # 00 00 00 00 00 00 00 00  00 00 00 00 00 00 00 00 
     dumpstr = dump(d)
     line += dumpstr[:8*3]
@@ -141,7 +141,7 @@ def hexdump(data, result='print'):
   '''
   Transform binary data to the hex dump text format:
 
-  0000000000: 00 00 00 00 00 00 00 00  00 00 00 00 00 00 00 00  ................
+  00000000: 00 00 00 00 00 00 00 00  00 00 00 00 00 00 00 00  ................
 
     [x] data argument as a binary string
     [x] data argument as a file like object
@@ -240,8 +240,8 @@ def runtest():
   # binary restore test
   bindata = restore(
 '''
-0000000000: 00 00 00 5B 68 65 78 64  75 6D 70 5D 00 00 00 00  ...[hexdump]....
-0000000010: 00 11 22 33 44 55 66 77  88 99 AA BB CC DD EE FF  .."3DUfw........
+00000000: 00 00 00 5B 68 65 78 64  75 6D 70 5D 00 00 00 00  ...[hexdump]....
+00000010: 00 11 22 33 44 55 66 77  88 99 AA BB CC DD EE FF  .."3DUfw........
 ''')
   if bin == bindata:
     print('restore check passed')
