@@ -12,7 +12,7 @@ Python 2::
 
     >>> import hexdump
     >>> hexdump.hexdump('\x00'*16)
-    0000000000: 00 00 00 00 00 00 00 00  00 00 00 00 00 00 00 00  ................
+    00000000: 00 00 00 00 00 00 00 00  00 00 00 00 00 00 00 00  ................
 
 Python 3::
 
@@ -21,7 +21,7 @@ Python 3::
    ...
    TypeError: Abstract unicode data (expected bytes)
    >>> hexdump.hexdump(b'\x00'*16)
-   0000000000: 00 00 00 00 00 00 00 00  00 00 00 00 00 00 00 00  ................
+   00000000: 00 00 00 00 00 00 00 00  00 00 00 00 00 00 00 00  ................
  
 Python 3 strings are arrays of abstract indexes in unicode
 table. Single index is an integer which takes more than one
@@ -36,7 +36,7 @@ Python 2::
 
    >>> import hexdump
    >>> res = hexdump.restore(
-   ... '0000000010: 00 11 22 33 44 55 66 77  88 99 AA BB CC DD EE FF  .."3DUfw........')
+   ... '0010: 00 11 22 33 44 55 66 77  88 99 AA BB CC DD EE FF  .."3DUfw........')
    >>> res
    '\x00\x11"3DUfw\x88\x99\xaa\xbb\xcc\xdd\xee\xff'
    >>> type(res)
@@ -46,7 +46,7 @@ Python 3::
 
    >>> import hexdump
    >>> res = hexdump.restore(
-   ... '0000000010: 00 11 22 33 44 55 66 77  88 99 AA BB CC DD EE FF  .."3DUfw........')
+   ... '0010: 00 11 22 33 44 55 66 77  88 99 AA BB CC DD EE FF  .."3DUfw........')
    >>> res
    b'\x00\x11"3DUfw\x88\x99\xaa\xbb\xcc\xdd\xee\xff'
    >>> type(res)
