@@ -29,6 +29,8 @@ __history__ = \
 x.x (xxxx-xx-xx)
  * restore() now raises TypeError if input data is
    not string
+ * hexdump() and dumpgen() now don't return unicode
+   strings in Python 2.x when generator is requested
 
 1.0 (2013-12-30)
  * length of address is reduced from 10 to 8
@@ -118,8 +120,10 @@ def dump(binary):
 
   00 00 00 00 00 00 00 00 00 00 00 ...
   '''
-  hexstr = binascii.hexlify(binary).decode('ascii').upper()
-  return ' '.join(chunks(hexstr, 2))
+  hexstr = binascii.hexlify(binary)
+  if PY3K:
+    hexstr = hexstr.decode('ascii')
+  return ' '.join(chunks(hexstr.upper(), 2))
 
 def dumpgen(data):
   '''
@@ -267,8 +271,8 @@ def runtest():
   assert hexout == expected, 'returned hex didn\'t match'
   print('return generator')
   hexgen = hexdump(bin, result='generator')
-  print(next(hexgen))
-  print(next(hexgen))
+  assert next(hexgen) == expected.split('\n')[0], 'hex generator 1 didn\'t match'
+  assert next(hexgen) == expected.split('\n')[1], 'hex generator 2 didn\'t match'
 
   # binary restore test
   bindata = restore(
