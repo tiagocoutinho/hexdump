@@ -16,7 +16,8 @@ Far Manager
 000000010: 00 11 22 33 44 55 66 77 ¦ 88 99 AA BB CC DD EE FF   ?"3DUfwˆ™ª»ÌÝîÿ
 
 
-2. Restore binary data from the formats above
+2. Restore binary data from the formats above as well
+   as from less exotic strings of raw hex
 
 """
 
@@ -27,6 +28,7 @@ __license__ = 'Public Domain'
 __history__ = \
 """
 x.x (xxxx-xx-xx)
+ * restore() from hex strings without spaces
  * restore() now raises TypeError if input data is
    not string
  * hexdump() and dumpgen() now don't return unicode
@@ -224,13 +226,13 @@ def restore(dump):
       else:                 # ...00 00 00 00... - Scapy, no separator
         hexdata = line[:bytehexwidth]
 
-      # remove spaces and convert
-      if PY3K:
-        result += bytes.fromhex(hexdata)
-      else:
-        result += hexdata.replace(' ', '').decode('hex')
+      line = hexdata.replace(' ', '')
+
+    # remove spaces and convert
+    if PY3K:
+      result += bytes.fromhex(line)
     else:
-      raise TypeError('Unknown hexdump format for restore')
+      result += line.decode('hex')
 
   return result
 
@@ -300,6 +302,8 @@ def runtest():
   echo('restore scapy format ', linefeed=False)
   assert bin == restore(scapy), 'scapy format check failed'
   echo('passed')
+
+  assert restore('5B68657864756D705D') == '[hexdump]', 'no space check failed'
 
   print('---')
   hexdump(open(hexfile, 'rb'))
