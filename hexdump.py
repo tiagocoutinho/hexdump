@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 # -*- coding: latin-1 -*-
 """
-Dump binary data to the following text format:
+1. Dump binary data to the following text format:
 
 00000000: 00 00 00 5B 68 65 78 64  75 6D 70 5D 00 00 00 00  ...[hexdump]....
 00000010: 00 11 22 33 44 55 66 77  88 99 AA BB CC DD EE FF  .."3DUfw........
@@ -14,6 +14,9 @@ Scapy
 Far Manager
 000000000: 00 00 00 5B 68 65 78 64 ¦ 75 6D 70 5D 00 00 00 00     [hexdump]
 000000010: 00 11 22 33 44 55 66 77 ¦ 88 99 AA BB CC DD EE FF   ?"3DUfwˆ™ª»ÌÝîÿ
+
+
+2. Restore binary data from the formats above
 
 """
 
@@ -231,6 +234,18 @@ def restore(dump):
 def runtest():
   '''Run hexdump tests. Requires hexfile.bin to be in the same
      directory as hexdump.py itself'''
+
+  def echo(msg, linefeed=True):
+    sys.stdout.write(msg)
+    if linefeed:
+      sys.stdout.write('\n')
+
+  expected = '''\
+00000000: 00 00 00 5B 68 65 78 64  75 6D 70 5D 00 00 00 00  ...[hexdump]....
+00000010: 00 11 22 33 44 55 66 77  88 99 AA BB CC DD EE FF  .."3DUfw........\
+'''
+
+
   import os.path as osp
   hexfile = osp.dirname(osp.abspath(__file__)) + '/hexfile.bin' 
 
@@ -247,10 +262,10 @@ def runtest():
   bin = open(hexfile, 'rb').read()
   # dumping file-like binary object to screen (default behavior)
   hexdump(bin)
-  print('-- returned output')
+  print('return output')
   hexout = hexdump(bin, result='return')
-  print(hexout)
-  print('-- returned generator')
+  assert hexout == expected, 'returned hex didn\'t match'
+  print('return generator')
   hexgen = hexdump(bin, result='generator')
   print(next(hexgen))
   print(next(hexgen))
@@ -261,27 +276,27 @@ def runtest():
 00000000: 00 00 00 5B 68 65 78 64  75 6D 70 5D 00 00 00 00  ...[hexdump]....
 00000010: 00 11 22 33 44 55 66 77  88 99 AA BB CC DD EE FF  .."3DUfw........
 ''')
-  if bin == bindata:
-    print('restore check passed')
-  else:
-    raise
+  echo('restore check ', linefeed=False)
+  assert bin == bindata, 'restore check failed'
+  echo('passed')
+
   far = \
 '''
 000000000: 00 00 00 5B 68 65 78 64 ¦ 75 6D 70 5D 00 00 00 00     [hexdump]
 000000010: 00 11 22 33 44 55 66 77 ¦ 88 99 AA BB CC DD EE FF   ?"3DUfwˆ™ª»ÌÝîÿ
 '''
-  if bin == restore(far):
-    print('restore far format check passed')
-  else:
-    raise
+  echo('restore far format ', linefeed=False)
+  assert bin == restore(far), 'far format check failed'
+  echo('passed')
+
   scapy = '''\
 00 00 00 5B 68 65 78 64 75 6D 70 5D 00 00 00 00  ...[hexdump]....
 00 11 22 33 44 55 66 77 88 99 AA BB CC DD EE FF  .."3DUfw........
 '''
-  if bin == restore(scapy):
-    print('restore scapy format check passed')
-  else:
-    raise
+  echo('restore scapy format ', linefeed=False)
+  assert bin == restore(scapy), 'scapy format check failed'
+  echo('passed')
+
   print('---')
   hexdump(open(hexfile, 'rb'))
 
