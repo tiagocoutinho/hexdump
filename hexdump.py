@@ -17,12 +17,16 @@ Far Manager
 
 """
 
-__version__ = '1.0'
+__version__ = '1.1dev'
 __author__  = 'anatoly techtonik <techtonik@gmail.com>'
 __license__ = 'Public Domain'
 
 __history__ = \
 """
+x.x (xxxx-xx-xx)
+ * restore() now raises TypeError if input data is
+   not string
+
 1.0 (2013-12-30)
  * length of address is reduced from 10 to 8
  * hexdump() got new 'result' keyword argument, it
@@ -70,19 +74,19 @@ def int2byte(i):
     return chr(i)
 
 # --- - chunking helpers
-def chunks(seq, size): 
+def chunks(seq, size):
   '''Generator that cuts sequence (bytes, memoryview, etc.)
      into chunks of given size. If `seq` length is not multiply
      of `size`, the lengh of the last chunk returned will be
      less than requested.
 
-     >>> list( chunks([1,2,3,4,5,6,7], 3) ) 
-     [[1, 2, 3], [4, 5, 6], [7]] 
-  ''' 
+     >>> list( chunks([1,2,3,4,5,6,7], 3) )
+     [[1, 2, 3], [4, 5, 6], [7]]
+  '''
   d, m = divmod(len(seq), size)
   for i in range(d):
     yield seq[i*size:(i+1)*size]
-  if m: 
+  if m:
     yield seq[d*size:]
 
 def chunkread(f, size):
@@ -191,33 +195,36 @@ def restore(dump):
   bytehexwidth = 3*16-1 # min width for a bytewise dump - 00 00 ... style
 
   result = bytes() if PY3K else ''
-  if type(dump) == str:
-    text = dump.strip()  # ignore surrounding empty lines
-    for line in text.split('\n'):
-      # strip address part
-      addrend = line.find(':')
-      if 0 < addrend < minhexwidth:  # : is not in ascii part
-        line = line[addrend+1:]
-      line = line.lstrip()
-      # check dump type
-      if line[2] == ' ':  # 00 00 00 ...  type of dump
-        # check separator
-        sepstart = (2+1)*7+2  # ('00'+' ')*7+'00'
-        sep = line[sepstart:sepstart+3]
-        if sep[:2] == '  ' and sep[2:] != ' ':  # ...00 00  00 00...
-          hexdata = line[:bytehexwidth+1]
-        elif sep[2:] == ' ':  # ...00 00 | 00 00...  - Far Manager
-          hexdata = line[:sepstart] + line[sepstart+3:bytehexwidth+2]
-        else:                 # ...00 00 00 00... - Scapy, no separator
-          hexdata = line[:bytehexwidth]
+  if type(dump) != str:
+    raise TypeError('Invalid data for restore')
 
-        # remove spaces and convert
-        if PY3K:
-          result += bytes.fromhex(hexdata)
-        else:
-          result += hexdata.replace(' ', '').decode('hex')
+  text = dump.strip()  # ignore surrounding empty lines
+  for line in text.split('\n'):
+    # strip address part
+    addrend = line.find(':')
+    if 0 < addrend < minhexwidth:  # : is not in ascii part
+      line = line[addrend+1:]
+    line = line.lstrip()
+    # check dump type
+    if line[2] == ' ':  # 00 00 00 ...  type of dump
+      # check separator
+      sepstart = (2+1)*7+2  # ('00'+' ')*7+'00'
+      sep = line[sepstart:sepstart+3]
+      if sep[:2] == '  ' and sep[2:] != ' ':  # ...00 00  00 00...
+        hexdata = line[:bytehexwidth+1]
+      elif sep[2:] == ' ':  # ...00 00 | 00 00...  - Far Manager
+        hexdata = line[:sepstart] + line[sepstart+3:bytehexwidth+2]
+      else:                 # ...00 00 00 00... - Scapy, no separator
+        hexdata = line[:bytehexwidth]
+
+      # remove spaces and convert
+      if PY3K:
+        result += bytes.fromhex(hexdata)
       else:
-        raise TypeError('Unknown hexdump format')
+        result += hexdata.replace(' ', '').decode('hex')
+    else:
+      raise TypeError('Unknown hexdump format for restore')
+
   return result
 
 

@@ -54,7 +54,7 @@ ChangeLog
  * length of address is reduced from 10 to 8
  * hexdump() got new 'result' keyword argument, it
    can be either 'print', 'generator' or 'return'
- * actual dumping logic is not in new dumpgen()
+ * actual dumping logic is now in new dumpgen()
    generator function
  * new dump(binary) function that takes binary data
    and returns string like "66 6F 72 6D 61 74"
