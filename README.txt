@@ -1,3 +1,7 @@
+
+hexdump: edit your binary with any text editor
+
+
 Cross-platform Python 2/3 library to dump and restore
 binary data to and from hex form.
 
@@ -66,6 +70,7 @@ Make hex dump of binary data::
 Restore binary data::
 
    $ python -m hexdump --restore hexdump.txt > binary.dat
+
 
 Release checklist
 =================
