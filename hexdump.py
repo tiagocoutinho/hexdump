@@ -28,6 +28,8 @@ __license__ = 'Public Domain'
 __history__ = \
 """
 x.x (xxxx-xx-xx)
+ * add --restore option to command line mode to get
+   binary data back from hex dump
  * restore() from hex strings without spaces
  * restore() now raises TypeError if input data is
    not string
@@ -311,7 +313,8 @@ def runtest():
 
 if __name__ == '__main__':
   from optparse import OptionParser
-  parser = OptionParser(usage='%prog [binfile]')
+  parser = OptionParser(usage='\n  %prog binfile\n  %prog -r hexfile', version=__version__)
+  parser.add_option('-r', '--restore', action='store_true', help='restore binary')
   parser.add_option('--test', action='store_true', help='run hexdump sanity checks')
 
   options, args = parser.parse_args()
@@ -327,10 +330,15 @@ if __name__ == '__main__':
     parser.print_help()
     sys.exit(-1)
   else:
-    # [x] memory effective dump 
-    hexdump(open(args[0], 'rb'))
+    if not options.restore:
+      # [x] memory effective dump 
+      hexdump(open(args[0], 'rb'))
+    else:
+      # [ ] memory efficient restore
+      # [ ] fix bug that Python works with stdout in text mode
+      sys.stdout.write(restore(open(args[0], 'rb').read()))
 
-# [ ] file restore from command line utility
+# [x] file restore from command line utility
 # [ ] encoding param for hexdump()ing Python 3 str if anybody requests that
 
 # [ ] document chunking API
