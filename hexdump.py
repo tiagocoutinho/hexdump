@@ -250,7 +250,7 @@ def runtest():
 
   expected = '''\
 00000000: 00 00 00 5B 68 65 78 64  75 6D 70 5D 00 00 00 00  ...[hexdump]....
-00000010: 00 11 22 33 44 55 66 77  88 99 AA BB CC DD EE FF  .."3DUfw........\
+00000010: 00 11 22 33 44 55 66 77  88 99 0A BB CC DD EE FF  .."3DUfw........\
 '''
 
 
@@ -265,7 +265,7 @@ def runtest():
   # allowable character set filter
   hexdump(b'line\nfeed\r\ntest')
   hexdump(b'\x00\x00\x00\x5B\x68\x65\x78\x64\x75\x6D\x70\x5D\x00\x00\x00\x00'
-          b'\x00\x11\x22\x33\x44\x55\x66\x77\x88\x99\xAA\xBB\xCC\xDD\xEE\xFF')
+          b'\x00\x11\x22\x33\x44\x55\x66\x77\x88\x99\x0A\xBB\xCC\xDD\xEE\xFF')
   print('---')
   bin = open(hexfile, 'rb').read()
   # dumping file-like binary object to screen (default behavior)
@@ -282,7 +282,7 @@ def runtest():
   bindata = restore(
 '''
 00000000: 00 00 00 5B 68 65 78 64  75 6D 70 5D 00 00 00 00  ...[hexdump]....
-00000010: 00 11 22 33 44 55 66 77  88 99 AA BB CC DD EE FF  .."3DUfw........
+00000010: 00 11 22 33 44 55 66 77  88 99 0A BB CC DD EE FF  .."3DUfw........
 ''')
   echo('restore check ', linefeed=False)
   assert bin == bindata, 'restore check failed'
@@ -291,7 +291,7 @@ def runtest():
   far = \
 '''
 000000000: 00 00 00 5B 68 65 78 64 ¦ 75 6D 70 5D 00 00 00 00     [hexdump]
-000000010: 00 11 22 33 44 55 66 77 ¦ 88 99 AA BB CC DD EE FF   ?"3DUfwˆ™ª»ÌÝîÿ
+000000010: 00 11 22 33 44 55 66 77 ¦ 88 99 0A BB CC DD EE FF   ?"3DUfwˆ™ª»ÌÝîÿ
 '''
   echo('restore far format ', linefeed=False)
   assert bin == restore(far), 'far format check failed'
@@ -299,7 +299,7 @@ def runtest():
 
   scapy = '''\
 00 00 00 5B 68 65 78 64 75 6D 70 5D 00 00 00 00  ...[hexdump]....
-00 11 22 33 44 55 66 77 88 99 AA BB CC DD EE FF  .."3DUfw........
+00 11 22 33 44 55 66 77 88 99 0A BB CC DD EE FF  .."3DUfw........
 '''
   echo('restore scapy format ', linefeed=False)
   assert bin == restore(scapy), 'scapy format check failed'
@@ -335,8 +335,17 @@ if __name__ == '__main__':
       hexdump(open(args[0], 'rb'))
     else:
       # [ ] memory efficient restore
-      # [ ] fix bug that Python works with stdout in text mode
-      sys.stdout.write(restore(open(args[0], 'rb').read()))
+      # [x] Python works with stdout in text mode by default, which
+      #     leads to corrupted binary data on Windows
+      #       python -c "import sys; sys.stdout.write('_\n_')" > file
+      #       python -c "print(repr(open('file', 'rb').read()))"
+      if PY3K:
+        sys.stdout.buffer.write(restore(open(args[0]).read()))
+      else:
+        if sys.platform == "win32":
+          import os, msvcrt
+          msvcrt.setmode(sys.stdout.fileno(), os.O_BINARY)
+        sys.stdout.write(restore(open(args[0], 'rb').read()))
 
 # [x] file restore from command line utility
 # [ ] encoding param for hexdump()ing Python 3 str if anybody requests that
