@@ -21,13 +21,13 @@ Far Manager
 
 """
 
-__version__ = '1.1dev'
+__version__ = '2.0'
 __author__  = 'anatoly techtonik <techtonik@gmail.com>'
 __license__ = 'Public Domain'
 
 __history__ = \
 """
-x.x (xxxx-xx-xx)
+2.0 (2014-01-30)
  * add --restore option to command line mode to get
    binary data back from hex dump
  * restore() from hex strings without spaces
