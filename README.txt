@@ -72,9 +72,23 @@ Restore binary data::
    $ python -m hexdump --restore hexdump.txt > binary.dat
 
 
+04 - run self-tests
+===================
+Automatically with `tox`::
+
+   $ tox
+
+Manually::
+
+   $ hexdump.py --test output.txt
+   $ diff -u3 hextest.txt output.txt
+
+
+
 Release checklist
 =================
 
+| [ ] run tests  
 | [ ] update version in hexdump.py  
 | [x] update version in setup.py  
 | [ ] update ChangeLog in setup.py from hexdump.py  
