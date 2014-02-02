@@ -34,7 +34,7 @@ setup(
     author='anatoly techtonik <techtonik@gmail.com>',
     url='http://bitbucket.org/techtonik/hexdump/',
 
-    description="dump and restore binary data in hex form",
+    description="view/edit your binary with any text editor",
     license="Public Domain",
     classifiers=[
         #'Environment :: Console',
