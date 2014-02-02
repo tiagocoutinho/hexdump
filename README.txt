@@ -1,7 +1,4 @@
 
-hexdump: edit your binary with any text editor
-
-
 Cross-platform Python 2/3 library to dump and restore
 binary data to and from hex form.
 
