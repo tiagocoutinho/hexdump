@@ -268,6 +268,7 @@ def runtest(logfile=None):
   if logfile:
     openlog = open(logfile, 'wb')
     # copy stdout and stderr streams to log file
+    savedstd = sys.stderr, sys.stdout
     sys.stderr = TeeOutput(sys.stderr, openlog)
     sys.stdout = TeeOutput(sys.stdout, openlog)
     
@@ -334,11 +335,15 @@ def runtest(logfile=None):
   assert bin == restore(scapy), 'scapy format check failed'
   echo('passed')
 
-  assert restore('5B68657864756D705D') == '[hexdump]', 'no space check failed'
+  if not PY3K:
+    assert restore('5B68657864756D705D') == '[hexdump]', 'no space check failed'
+  else:
+    assert restore('5B68657864756D705D') == b'[hexdump]', 'no space check failed'
 
   print('---')
   hexdump(open(hexfile, 'rb'))
   if logfile:
+    sys.stderr, sys.stdout = savedstd
     openlog.close()
 
 
