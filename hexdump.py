@@ -30,6 +30,7 @@ __history__ = \
 2.0 (2014-01-30)
  * add --restore option to command line mode to get
    binary data back from hex dump
+ * support saving test output with `--test logfile`
  * restore() from hex strings without spaces
  * restore() now raises TypeError if input data is
    not string
@@ -239,9 +240,37 @@ def restore(dump):
   return result
 
 
-def runtest():
+def runtest(logfile=None):
   '''Run hexdump tests. Requires hexfile.bin to be in the same
      directory as hexdump.py itself'''
+
+  class TeeOutput(object):
+    def __init__(self, stream1, stream2):
+      self.outputs = [stream1, stream2]
+
+    # -- methods from sys.stdout / sys.stderr
+    def write(self, data):
+      for stream in self.outputs:
+        if PY3K:
+          if 'b' in stream.mode:
+            data = data.encode('utf-8')
+        stream.write(data)
+        stream.flush()
+
+    def tell(self):
+      raise IOError
+
+    def flush(self):
+      for stream in self.outputs:
+        stream.flush()
+    # --/ sys.stdout
+
+  if logfile:
+    openlog = open(logfile, 'wb')
+    # copy stdout and stderr streams to log file
+    sys.stderr = TeeOutput(sys.stderr, openlog)
+    sys.stdout = TeeOutput(sys.stdout, openlog)
+    
 
   def echo(msg, linefeed=True):
     sys.stdout.write(msg)
@@ -309,23 +338,26 @@ def runtest():
 
   print('---')
   hexdump(open(hexfile, 'rb'))
+  if logfile:
+    openlog.close()
 
 
 if __name__ == '__main__':
   from optparse import OptionParser
-  parser = OptionParser(usage='\n  %prog binfile\n  %prog -r hexfile', version=__version__)
+  parser = OptionParser(usage='''
+  %prog binfile
+  %prog -r hexfile
+  %prog --test [logfile]''', version=__version__)
   parser.add_option('-r', '--restore', action='store_true', help='restore binary')
   parser.add_option('--test', action='store_true', help='run hexdump sanity checks')
 
   options, args = parser.parse_args()
 
-  if args:
-    if options.test:
-      parser.print_help()
-      sys.exit(-1)
-
   if options.test:
-    runtest()
+    if args:
+      runtest(logfile=args[0])
+    else:
+      runtest()
   elif not args:
     parser.print_help()
     sys.exit(-1)
