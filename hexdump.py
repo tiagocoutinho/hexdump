@@ -27,7 +27,7 @@ __license__ = 'Public Domain'
 
 __history__ = \
 """
-2.0 (2014-01-30)
+2.0 (2014-02-02)
  * add --restore option to command line mode to get
    binary data back from hex dump
  * support saving test output with `--test logfile`
