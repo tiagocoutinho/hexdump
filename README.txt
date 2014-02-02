@@ -1,6 +1,6 @@
 
-Cross-platform Python 2/3 library to dump and restore
-binary data to and from hex form.
+Cross-platform Python 2/3 library and tool to
+work with hex and binary data.
 
 Placed into public domain
 by anatoly techtonik <techtonik@gmail.com>
