@@ -1,5 +1,8 @@
 from distutils.core import setup
 
+from os.path import dirname, join
+
+ROOT = dirname(__file__)
 
 def get_version(relpath):
     """read version info from file without importing it"""
@@ -47,38 +50,5 @@ setup(
     py_modules=['hexdump'],
     data_files=[('', ['hexfile.bin'])],
 
-    long_description= """
-ChangeLog
-=========
-1.0 (2013-12-30)
- * length of address is reduced from 10 to 8
- * hexdump() got new 'result' keyword argument, it
-   can be either 'print', 'generator' or 'return'
- * actual dumping logic is now in new dumpgen()
-   generator function
- * new dump(binary) function that takes binary data
-   and returns string like "66 6F 72 6D 61 74"
- * new genchunks(mixed, size) function that chunks
-   both sequences and file like objects
-
-0.5 (2013-06-10)
- * hexdump is now also a command line utility (no
-   restore yet)
-
-0.4 (2013-06-09)
- * fix installation with Python 3 for non English
-   versions of Windows, thanks to George Schizas
-
-0.3 (2013-04-29)
- * fully Python 3 compatible
-
-0.2 (2013-04-28)
- * restore() to recover binary data from a hex dump in
-   native, Far Manager and Scapy text formats (others
-   might work as well)
- * restore() is Python 3 compatible
-
-0.1 (2013-04-28)
- * working hexdump() function for Python 2
-"""
+    long_description=open(join(ROOT, 'README.txt')).read(),
 )
