@@ -83,6 +83,16 @@ Manually::
 
 ChangeLog
 =========
+2.0 (2014-01-30)
+ * add --restore option to command line mode to get
+   binary data back from hex dump
+ * support saving test output with `--test logfile`
+ * restore() from hex strings without spaces
+ * restore() now raises TypeError if input data is
+   not string
+ * hexdump() and dumpgen() now don't return unicode
+   strings in Python 2.x when generator is requested
+
 1.0 (2013-12-30)
  * length of address is reduced from 10 to 8
  * hexdump() got new 'result' keyword argument, it
