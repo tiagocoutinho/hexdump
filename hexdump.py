@@ -31,6 +31,8 @@ __history__ = \
  * remove unused int2byte() helper
  * add dehex(text) helper to convert hex string
    to binary data
+ * add 'size' argument to dump() helper to specify
+   length of chunks
 
 2.0 (2014-02-02)
  * add --restore option to command line mode to get
@@ -126,17 +128,16 @@ def dehex(hextext):
     hextext = "".join(hextext.split())
     return hextext.decode('hex')
 
-def dump(binary):
+def dump(binary, size=2):
   '''
-  Convert `binary` bytes (Python 3) or str (Python 2) to
-  hex string:
-
-  00 00 00 00 00 00 00 00 00 00 00 ...
+  Convert binary data (bytes in Python 3 and str in
+  Python 2) to hex string like '00 DE AD BE EF'.
+  `size` argument specifies length of text chunks.
   '''
   hexstr = binascii.hexlify(binary)
   if PY3K:
     hexstr = hexstr.decode('ascii')
-  return ' '.join(chunks(hexstr.upper(), 2))
+  return ' '.join(chunks(hexstr.upper(), size))
 
 def dumpgen(data):
   '''
@@ -354,7 +355,8 @@ if __name__ == '__main__':
   %prog binfile
   %prog -r hexfile
   %prog --test [logfile]''', version=__version__)
-  parser.add_option('-r', '--restore', action='store_true', help='restore binary')
+  parser.add_option('-r', '--restore', action='store_true',
+                                       help='restore binary from hex dump')
   parser.add_option('--test', action='store_true', help='run hexdump sanity checks')
 
   options, args = parser.parse_args()
