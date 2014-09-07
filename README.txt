@@ -25,7 +25,7 @@ basic API
 
    Helper to convert binary data (bytes in Python 3 and
    str in Python 2) to string like '00 DE AD BE EF'.
-   `size` argument specifies width of text chunks.
+   `size` argument specifies length of text chunks.
 
 .. function:: dehex(text)
 
