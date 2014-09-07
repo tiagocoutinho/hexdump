@@ -1,6 +1,6 @@
 
-Cross-platform Python 2/3 library and tool to
-work with hex and binary data.
+Cross-platform Python 2/3 library and single module command
+line tool for going from binary to hex and back.
 
 Placed into public domain
 by anatoly techtonik <techtonik@gmail.com>

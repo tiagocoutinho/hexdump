@@ -29,6 +29,8 @@ __history__ = \
 """
 3.0 (TBD)
  * remove unused int2byte() helper
+ * add dehex(text) helper to convert hex string
+   to binary data
 
 2.0 (2014-02-02)
  * add --restore option to command line mode to get
@@ -78,7 +80,6 @@ import sys
 # --- constants
 PY3K = sys.version_info >= (3, 0)
 
-# --- helpers
 # --- - chunking helpers
 def chunks(seq, size):
   '''Generator that cuts sequence (bytes, memoryview, etc.)
@@ -113,7 +114,18 @@ def genchunks(mixed, size):
     return chunks(mixed, size)
 # --- - /chunking helpers
 
-# --- hex stuff
+
+def dehex(hextext):
+  """
+  Convert from hex string to binary data stripping
+  whitespaces from `hextext` if necessary.
+  """
+  if PY3K:
+    return bytes.fromhex(hextext)
+  else:
+    hextext = "".join(hextext.split())
+    return hextext.decode('hex')
+
 def dump(binary):
   '''
   Convert `binary` bytes (Python 3) or str (Python 2) to
@@ -224,15 +236,8 @@ def restore(dump):
         hexdata = line[:sepstart] + line[sepstart+3:bytehexwidth+2]
       else:                 # ...00 00 00 00... - Scapy, no separator
         hexdata = line[:bytehexwidth]
-
-      line = hexdata.replace(' ', '')
-
-    # remove spaces and convert
-    if PY3K:
-      result += bytes.fromhex(line)
-    else:
-      result += line.decode('hex')
-
+      line = hexdata
+    result += dehex(line)
   return result
 
 
