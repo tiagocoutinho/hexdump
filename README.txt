@@ -5,6 +5,10 @@ line tool for going from binary to hex and back.
 Placed into public domain
 by anatoly techtonik <techtonik@gmail.com>
 
+NOTE: `hexdump` is currently broken on Python 3 + Windows
+due to bug http://bugs.python.org/issue20844 (tested with
+latest Python 3.4.1)
+
 
 command line recipes
 ====================
