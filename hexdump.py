@@ -21,12 +21,15 @@ Far Manager
 
 """
 
-__version__ = '2.0'
+__version__ = '3.0dev'
 __author__  = 'anatoly techtonik <techtonik@gmail.com>'
 __license__ = 'Public Domain'
 
 __history__ = \
 """
+3.0 (TBD)
+ * remove unused int2byte() helper
+
 2.0 (2014-02-02)
  * add --restore option to command line mode to get
    binary data back from hex dump
@@ -76,13 +79,6 @@ import sys
 PY3K = sys.version_info >= (3, 0)
 
 # --- helpers
-def int2byte(i):
-  '''convert int [0..255] to binary byte'''
-  if PY3K:
-    return i.to_bytes(1, 'little')
-  else:
-    return chr(i)
-
 # --- - chunking helpers
 def chunks(seq, size):
   '''Generator that cuts sequence (bytes, memoryview, etc.)
