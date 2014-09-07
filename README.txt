@@ -106,6 +106,13 @@ Automatically with `tox`::
 
 ChangeLog
 =========
+3.0 (2014-09-07)
+ * remove unused int2byte() helper
+ * add dehex(text) helper to convert hex string
+   to binary data
+ * add 'size' argument to dump() helper to specify
+   length of chunks
+
 2.0 (2014-02-02)
  * add --restore option to command line mode to get
    binary data back from hex dump
