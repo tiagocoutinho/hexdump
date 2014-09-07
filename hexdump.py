@@ -21,13 +21,13 @@ Far Manager
 
 """
 
-__version__ = '3.0dev'
+__version__ = '3.0'
 __author__  = 'anatoly techtonik <techtonik@gmail.com>'
 __license__ = 'Public Domain'
 
 __history__ = \
 """
-3.0 (TBD)
+3.0 (2014-09-07)
  * remove unused int2byte() helper
  * add dehex(text) helper to convert hex string
    to binary data
