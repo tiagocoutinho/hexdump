@@ -50,5 +50,5 @@ setup(
     py_modules=['hexdump'],
     data_files=[('', ['hexfile.bin'])],
 
-    long_description=open(join(ROOT, 'README.txt')).read(),
+    long_description=open(join(ROOT, 'README.txt'), encoding='utf_8').read(),
 )
