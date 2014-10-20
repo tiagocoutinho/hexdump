@@ -1,19 +1,31 @@
+
 from distutils.core import setup
 
-from os.path import dirname, join
 
-ROOT = dirname(__file__)
+# This snippet is in public domain
+# https://gist.github.com/techtonik/4066623/
 
 def get_version(relpath):
-    """read version info from file without importing it"""
+    """Read version info from a file without importing it"""
     from os.path import dirname, join
-    # Below is a hack to read text file with cp1252 characters
+
+    # Allow to use function interactively
+    if '__file__' not in globals():
+        root = '.'
+    else:
+        root = dirname(__file__)
+
+    # The code below reads text file with unknown encoding in
     # in Python2/3 compatible way. Reading this text file
     # without specifying encoding will fail in Python 3 on some
     # systems (see http://goo.gl/5XmOH). Specifying encoding as
-    # as open() parameter is incompatible with Python 2
-    for line in open(join(dirname(__file__), relpath), 'rb'):
-        line = line.decode('cp1252')
+    # open() parameter is incompatible with Python 2
+
+    # cp437 is the encoding without missing points, safe against:
+    #   UnicodeDecodeError: 'charmap' codec can't decode byte ...
+
+    for line in open(join(root, relpath), 'rb'):
+        line = line.decode('cp437')
         if '__version__' in line:
             if '"' in line:
                 # __version__ = "0.9"
@@ -26,6 +38,7 @@ def get_description(relpath):
     from os.path import dirname, join
     text = open(join(dirname(__file__), 'README.txt'), 'rb').read()
     return text.decode('utf-8')
+
 
 # Distutils 'API' to ship test data along with hexdump.py
 # http://stackoverflow.com/questions/1612733/including-non-python-files-with-setup-py
