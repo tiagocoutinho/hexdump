@@ -2,13 +2,6 @@
 Cross-platform Python 2/3 library and single module command
 line tool for going from binary to hex and back.
 
-Placed into public domain
-by anatoly techtonik <techtonik@gmail.com>
-
-NOTE: `hexdump` is currently broken on Python 3 + Windows
-due to bug http://bugs.python.org/issue20844 (tested with
-latest Python 3.4.1)
-
 
 command line recipes
 ====================
@@ -106,6 +99,13 @@ Automatically with `tox`::
 
 ChangeLog
 =========
+3.1 (2014-10-20)
+ * implemented workaround against mysterious coding
+   issue with Python 3 (see revision 51302cf)
+ * fix Python 3 installs for systems where UTF-8 is
+   not default (Windows), thanks to George Schizas
+   (the problem was caused by reading of README.txt)
+
 3.0 (2014-09-07)
  * remove unused int2byte() helper
  * add dehex(text) helper to convert hex string
@@ -162,3 +162,14 @@ Release checklist
 | [ ] update version in hexdump.py  
 | [ ] update ChangeLog in README.txt from hexdump.py  
 | [ ] python setup.py register sdist upload  
+
+
+License
+=======
+Public Domain
+
+
+Credits
+=======
+anatoly techtonik <techtonik@gmail.com>
+George Schizas
