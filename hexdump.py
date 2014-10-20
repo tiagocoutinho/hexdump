@@ -23,13 +23,15 @@ Far Manager
 
 """
 
-__version__ = '3.1dev'
+__version__ = '3.1'
 __author__  = 'anatoly techtonik <techtonik@gmail.com>'
 __license__ = 'Public Domain'
 
 __history__ = \
 """
-3.1 (xxxx-xx-xx)
+3.1 (2014-10-20)
+ * implemented workaround against mysterious coding
+   issue with Python 3 (see revision 51302cf)
  * fix Python 3 installs for systems where UTF-8 is
    not default (Windows), thanks to George Schizas
    (the problem was caused by reading of README.txt)
