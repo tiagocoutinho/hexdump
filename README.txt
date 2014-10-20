@@ -24,7 +24,7 @@ basic API
    str in Python 2) to string like '00 DE AD BE EF'.
    `size` argument specifies length of text chunks.
 
-.. function:: dehex(text)
+.. function:: dehex(hextext)
 
    Helper to convert from hex string to binary data
    stripping whitespaces from `hextext` if necessary.
