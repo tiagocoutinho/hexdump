@@ -1,5 +1,7 @@
 #!/usr/bin/env python
 # -*- coding: latin-1 -*-
+
+# <-- removing this magic comment breaks Python 3.4 on Windows
 """
 1. Dump binary data to the following text format:
 
