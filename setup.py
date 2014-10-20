@@ -21,6 +21,12 @@ def get_version(relpath):
             elif "'" in line:
                 return line.split("'")[1]
 
+
+def get_description(relpath):
+    from os.path import dirname, join
+    text = open(join(dirname(__file__), 'README.txt'), 'rb').read()
+    return text.decode('utf-8')
+
 # Distutils 'API' to ship test data along with hexdump.py
 # http://stackoverflow.com/questions/1612733/including-non-python-files-with-setup-py
 from distutils.command.install import INSTALL_SCHEMES
@@ -50,5 +56,5 @@ setup(
     py_modules=['hexdump'],
     data_files=[('', ['hexfile.bin'])],
 
-    long_description=open(join(ROOT, 'README.txt'), encoding='utf_8').read(),
+    long_description=get_description('README.txt'),
 )
