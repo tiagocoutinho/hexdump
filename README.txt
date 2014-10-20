@@ -171,5 +171,5 @@ Public Domain
 
 Credits
 =======
-anatoly techtonik <techtonik@gmail.com>
-George Schizas
+| anatoly techtonik <techtonik@gmail.com>  
+| George Schizas  
