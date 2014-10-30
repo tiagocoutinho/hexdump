@@ -46,10 +46,10 @@ Python 3::
    >>> hexdump.hexdump(b'\x00'*16)
    00000000: 00 00 00 00 00 00 00 00  00 00 00 00 00 00 00 00  ................
  
-Python 3 strings are arrays of abstract indexes in unicode
-table. That's why hexdump is unable to dump it. You need to
-convert string to binary data first by specifying how integers
-are mapped to binary values, that means the encoding.
+Python 3 string is a sequence of indexes in abstract unicode
+table. Each index points to a symbol, which doesn't specify
+its binary value. To convert symbol to binary data, you need
+to lookup binary a value for in in the encoding.
 
 Here is how the same Russian text looks when transformed from
 abstract unicode integers of Python 3 to bytes in Windows-1251
