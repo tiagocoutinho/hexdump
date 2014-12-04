@@ -51,7 +51,7 @@ setup(
     name='hexdump',
     version=get_version('hexdump.py'),
     author='anatoly techtonik <techtonik@gmail.com>',
-    url='http://bitbucket.org/techtonik/hexdump/',
+    url='https://bitbucket.org/techtonik/hexdump/',
 
     description="view/edit your binary with any text editor",
     license="Public Domain",

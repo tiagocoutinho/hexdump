@@ -18,13 +18,13 @@ Restore binary from a saved hex dump::
 
 basic API
 =========
-.. function:: dump(binary, size=2)
+dump(binary, size=2)
 
    Helper to convert binary data (bytes in Python 3 and
    str in Python 2) to string like '00 DE AD BE EF'.
    `size` argument specifies length of text chunks.
 
-.. function:: dehex(hextext)
+dehex(hextext)
 
    Helper to convert from hex string to binary data
    stripping whitespaces from `hextext` if necessary.
@@ -95,6 +95,16 @@ Manually::
 Automatically with `tox`::
 
    $ tox
+
+
+questions
+=========
+| Q: Why creating another module when there is binascii already?
+| A: ``binascii.unhexlify()`` chokes on whitespaces and linefeeds.
+| ``hexdump.dehex()`` doesn't have this problem.
+
+If you have other questions, feel free to open an issue
+at https://bitbucket.org/techtonik/hexdump/
 
 
 ChangeLog
