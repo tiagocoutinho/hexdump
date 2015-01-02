@@ -14,8 +14,8 @@ Scapy
 00 11 22 33 44 55 66 77 88 99 AA BB CC DD EE FF  .."3DUfw........
 
 Far Manager
-000000000: 00 00 00 5B 68 65 78 64 ¦ 75 6D 70 5D 00 00 00 00     [hexdump]
-000000010: 00 11 22 33 44 55 66 77 ¦ 88 99 AA BB CC DD EE FF   ?"3DUfwˆ™ª»Ìİîÿ
+000000000: 00 00 00 5B 68 65 78 64 Åš 75 6D 70 5D 00 00 00 00     [hexdump]
+000000010: 00 11 22 33 44 55 66 77 Åš 88 99 AA BB CC DD EE FF   ?"3DUfwÂˆÂ™ÅÅ¥ÄšÃÃ®Ë™
 
 
 2. Restore binary data from the formats above as well
@@ -137,16 +137,18 @@ def dehex(hextext):
     hextext = "".join(hextext.split())
     return hextext.decode('hex')
 
-def dump(binary, size=2):
+def dump(binary, size=2, sep=' ', start=False):
   '''
   Convert binary data (bytes in Python 3 and str in
   Python 2) to hex string like '00 DE AD BE EF'.
   `size` argument specifies length of text chunks.
+  sep argument allows user-defined seperators for values
+  start argument allows for seperator to be added to the start of the string
   '''
   hexstr = binascii.hexlify(binary)
   if PY3K:
     hexstr = hexstr.decode('ascii')
-  return ' '.join(chunks(hexstr.upper(), size))
+  return ((sep != ' ' and start) and sep or '') + sep.join(chunks(hexstr.upper(), size))
 
 def dumpgen(data):
   '''
@@ -331,8 +333,8 @@ def runtest(logfile=None):
 
   far = \
 '''
-000000000: 00 00 00 5B 68 65 78 64 ¦ 75 6D 70 5D 00 00 00 00     [hexdump]
-000000010: 00 11 22 33 44 55 66 77 ¦ 88 99 0A BB CC DD EE FF   ?"3DUfwˆ™ª»Ìİîÿ
+000000000: 00 00 00 5B 68 65 78 64 Åš 75 6D 70 5D 00 00 00 00     [hexdump]
+000000010: 00 11 22 33 44 55 66 77 Åš 88 99 0A BB CC DD EE FF   ?"3DUfwÂˆÂ™ÅÅ¥ÄšÃÃ®Ë™
 '''
   echo('restore far format ', linefeed=False)
   assert bin == restore(far), 'far format check failed'
