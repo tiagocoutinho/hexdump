@@ -137,16 +137,17 @@ def dehex(hextext):
     hextext = "".join(hextext.split())
     return hextext.decode('hex')
 
-def dump(binary, size=2):
+def dump(binary, size=2, sep=' '):
   '''
   Convert binary data (bytes in Python 3 and str in
   Python 2) to hex string like '00 DE AD BE EF'.
-  `size` argument specifies length of text chunks.
+  `size` argument specifies length of text chunks
+  and `sep` sets chunk separator.
   '''
   hexstr = binascii.hexlify(binary)
   if PY3K:
     hexstr = hexstr.decode('ascii')
-  return ' '.join(chunks(hexstr.upper(), size))
+  return sep.join(chunks(hexstr.upper(), size))
 
 def dumpgen(data):
   '''
@@ -350,6 +351,8 @@ def runtest(logfile=None):
     assert restore('5B68657864756D705D') == '[hexdump]', 'no space check failed'
   else:
     assert restore('5B68657864756D705D') == b'[hexdump]', 'no space check failed'
+
+  assert dump('\\\xa1\xab\x1e', sep='').lower() == '5ca1ab1e'
 
   print('---')
   hexdump(open(hexfile, 'rb'))
