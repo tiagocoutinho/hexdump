@@ -14,8 +14,8 @@ Scapy
 00 11 22 33 44 55 66 77 88 99 AA BB CC DD EE FF  .."3DUfw........
 
 Far Manager
-000000000: 00 00 00 5B 68 65 78 64 Åš 75 6D 70 5D 00 00 00 00     [hexdump]
-000000010: 00 11 22 33 44 55 66 77 Åš 88 99 AA BB CC DD EE FF   ?"3DUfwÂˆÂ™ÅÅ¥ÄšÃÃ®Ë™
+000000000: 00 00 00 5B 68 65 78 64 ¦ 75 6D 70 5D 00 00 00 00     [hexdump]
+000000010: 00 11 22 33 44 55 66 77 ¦ 88 99 AA BB CC DD EE FF   ?"3DUfwˆ™ª»Ìİîÿ
 
 
 2. Restore binary data from the formats above as well
@@ -333,8 +333,8 @@ def runtest(logfile=None):
 
   far = \
 '''
-000000000: 00 00 00 5B 68 65 78 64 Åš 75 6D 70 5D 00 00 00 00     [hexdump]
-000000010: 00 11 22 33 44 55 66 77 Åš 88 99 0A BB CC DD EE FF   ?"3DUfwÂˆÂ™ÅÅ¥ÄšÃÃ®Ë™
+000000000: 00 00 00 5B 68 65 78 64 ¦ 75 6D 70 5D 00 00 00 00     [hexdump]
+000000010: 00 11 22 33 44 55 66 77 ¦ 88 99 0A BB CC DD EE FF   ?"3DUfwˆ™ª»Ìİîÿ
 '''
   echo('restore far format ', linefeed=False)
   assert bin == restore(far), 'far format check failed'
