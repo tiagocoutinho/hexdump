@@ -353,10 +353,10 @@ def runtest(logfile=None):
 
   if not PY3K:
     assert restore('5B68657864756D705D') == '[hexdump]', 'no space check failed'
+    assert dump('\\\xa1\xab\x1e', sep='').lower() == '5ca1ab1e'
   else:
     assert restore('5B68657864756D705D') == b'[hexdump]', 'no space check failed'
-
-  assert dump('\\\xa1\xab\x1e', sep='').lower() == '5ca1ab1e'
+    assert dump(b'\\\xa1\xab\x1e', sep='').lower() == '5ca1ab1e'
 
   print('---')
   hexdump(open(hexfile, 'rb'))
