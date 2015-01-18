@@ -1,8 +1,5 @@
 #!/usr/bin/env python
 
-from distutils.core import setup
-
-
 # This snippet is in public domain
 # https://gist.github.com/techtonik/4066623/
 
@@ -41,12 +38,24 @@ def get_description(relpath):
     return text.decode('utf-8')
 
 
+# --- distutils config
+
+from distutils.core import setup
+
 # Distutils 'API' to ship test data along with hexdump.py
 # http://stackoverflow.com/questions/1612733/including-non-python-files-with-setup-py
 from distutils.command.install import INSTALL_SCHEMES
 for scheme in INSTALL_SCHEMES.values():
   scheme['data'] = scheme['purelib']
 
+# Override sdist to always produce .zip archive
+# https://docs.python.org/2/distutils/extending.html
+# https://docs.python.org/2/distutils/apiref.html#creating-a-new-distutils-command
+from distutils.command.sdist import sdist as _sdist
+class sdistzip(_sdist):
+    def initialize_options(self):
+        _sdist.initialize_options(self)
+        self.formats = 'zip'
 
 setup(
     name='hexdump',
@@ -71,4 +80,6 @@ setup(
     data_files=[('', ['hexfile.bin'])],
 
     long_description=get_description('README.txt'),
+
+    cmdclass={'sdist': sdistzip},
 )
