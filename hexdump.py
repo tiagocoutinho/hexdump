@@ -30,6 +30,8 @@ __license__ = 'Public Domain'
 __history__ = \
 """
 3.2 (xxxx-xx-xx)
+ * hexdump is now packaged as .zip on all platforms
+   (on Linux created archive was tar.gz)
  * dump() now accepts configurable separator, patch
    by Ian Land (PR #3)
 
@@ -365,7 +367,7 @@ def runtest(logfile=None):
     openlog.close()
 
 
-if __name__ == '__main__':
+def main():
   from optparse import OptionParser
   parser = OptionParser(usage='''
   %prog binfile
@@ -402,6 +404,9 @@ if __name__ == '__main__':
           import os, msvcrt
           msvcrt.setmode(sys.stdout.fileno(), os.O_BINARY)
         sys.stdout.write(restore(open(args[0], 'rb').read()))
+
+if __name__ == '__main__':
+  main()
 
 # [x] file restore from command line utility
 # [ ] encoding param for hexdump()ing Python 3 str if anybody requests that
