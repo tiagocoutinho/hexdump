@@ -40,6 +40,9 @@ def get_description(relpath):
 
 # --- distutils config
 
+import os
+import textwrap
+import zipfile
 from distutils.core import setup
 
 # Distutils 'API' to ship test data along with hexdump.py
@@ -48,14 +51,42 @@ from distutils.command.install import INSTALL_SCHEMES
 for scheme in INSTALL_SCHEMES.values():
   scheme['data'] = scheme['purelib']
 
-# Override sdist to always produce .zip archive
+# Override sdist to always produce .zip archive (initialize_options)
+# and make the .zip file executable (run method)
 # https://docs.python.org/2/distutils/extending.html
 # https://docs.python.org/2/distutils/apiref.html#creating-a-new-distutils-command
 from distutils.command.sdist import sdist as _sdist
 class sdistzip(_sdist):
+    mainpy_tpl = textwrap.dedent("""\
+        import os
+        import sys
+
+        # add .zip/package to python lookup path
+        zippath = os.path.dirname(__file__)
+        imppath = os.path.join(zippath, '{importdir}')
+        sys.path.insert(0, imppath)
+
+        import {modname}
+        sys.exit({modname}.main())
+        """)
     def initialize_options(self):
         _sdist.initialize_options(self)
         self.formats = 'zip'
+    def run(self):
+        _sdist.run(self)
+        for archive in self.archive_files:
+            if archive.endswith('.zip'):
+                self.make_executable(archive)
+    def make_executable(self, archive):
+        zf = zipfile.ZipFile(archive, 'a', zipfile.ZIP_DEFLATED)
+        tplvars = dict(
+            modname = self.distribution.get_name(),
+            importdir = self.distribution.get_fullname())
+        text = self.mainpy_tpl.format(**tplvars)
+        zf.writestr('__main__.py', text)
+        zf.close()
+
+# /-- distutils config
 
 setup(
     name='hexdump',
