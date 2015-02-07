@@ -109,6 +109,13 @@ at https://bitbucket.org/techtonik/hexdump/
 
 ChangeLog
 =========
+3.2 (2015-07-02)
+ * hexdump is now packaged as .zip on all platforms
+   (on Linux created archive was tar.gz)
+ * .zip is executable! try `python hexdump-3.2.zip`
+ * dump() now accepts configurable separator, patch
+   by Ian Land (PR #3)
+
 3.1 (2014-10-20)
  * implemented workaround against mysterious coding
    issue with Python 3 (see revision 51302cf)

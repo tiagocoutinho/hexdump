@@ -29,7 +29,7 @@ __license__ = 'Public Domain'
 
 __history__ = \
 """
-3.2 (xxxx-xx-xx)
+3.2 (2015-07-02)
  * hexdump is now packaged as .zip on all platforms
    (on Linux created archive was tar.gz)
  * .zip is executable! try `python hexdump-3.2.zip`
@@ -64,7 +64,7 @@ __history__ = \
  * length of address is reduced from 10 to 8
  * hexdump() got new 'result' keyword argument, it
    can be either 'print', 'generator' or 'return'
- * actual dumping logic is not in new dumpgen()
+ * actual dumping logic is now in new dumpgen()
    generator function
  * new dump(binary) function that takes binary data
    and returns string like "66 6F 72 6D 61 74"
