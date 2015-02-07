@@ -1,10 +1,20 @@
 
-Cross-platform Python 2/3 library and single module command
-line tool for going from binary to hex and back.
+What is it about?
+
+* *dump* binary to hex and *restore* it back
+* Linux / Windows / OS X
+* Python 2/3
+* library and command line tool
 
 
-command line recipes
-====================
+command line
+============
+There are three ways to execute hexdump.py from command line::
+
+   $ python hexdump.py
+   $ python -m hexdump
+   $ python -m hexdump-3.2.zip
+
 Dump binary data in hex form::
 
    $ python -m hexdump binary.dat
