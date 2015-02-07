@@ -44,6 +44,8 @@ import os
 import textwrap
 import zipfile
 from distutils.core import setup
+from distutils import log
+from distutils import archive_util
 
 # Distutils 'API' to ship test data along with hexdump.py
 # http://stackoverflow.com/questions/1612733/including-non-python-files-with-setup-py
@@ -51,31 +53,32 @@ from distutils.command.install import INSTALL_SCHEMES
 for scheme in INSTALL_SCHEMES.values():
   scheme['data'] = scheme['purelib']
 
-# Override sdist to always produce .zip archive (initialize_options)
+# Override sdist to always produce .zip archive (initialize_options),
+# strip top dir from .zip that prevent import (make_archive)
 # and make the .zip file executable (run method)
 # https://docs.python.org/2/distutils/extending.html
 # https://docs.python.org/2/distutils/apiref.html#creating-a-new-distutils-command
 from distutils.command.sdist import sdist as _sdist
 class sdistzip(_sdist):
     mainpy_tpl = textwrap.dedent("""\
-        import os
         import sys
-
-        # add .zip/package to python lookup path
-        zippath = os.path.dirname(__file__)
-        imppath = os.path.join(zippath, '{importdir}')
-        sys.path.insert(0, imppath)
-
         import {modname}
         sys.exit({modname}.main())
         """)
     def initialize_options(self):
         _sdist.initialize_options(self)
         self.formats = 'zip'
+    def make_archive(self, base_name, format, root_dir=None, base_dir=None,
+                     owner=None, group=None):
+        log.info('[custom] strip extra dir from archive structure')
+        root = base_dir
+        return archive_util.make_archive(base_name, format, root_dir=root,
+                     dry_run=self.dry_run, owner=owner, group=group)
     def run(self):
         _sdist.run(self)
         for archive in self.archive_files:
             if archive.endswith('.zip'):
+                log.info('[custom] making \'%s\' executable' % archive)
                 self.make_executable(archive)
     def make_executable(self, archive):
         zf = zipfile.ZipFile(archive, 'a', zipfile.ZIP_DEFLATED)
