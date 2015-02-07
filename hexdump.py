@@ -23,7 +23,7 @@ Far Manager
 
 """
 
-__version__ = '3.1'
+__version__ = '3.2'
 __author__  = 'anatoly techtonik <techtonik@gmail.com>'
 __license__ = 'Public Domain'
 
@@ -32,6 +32,7 @@ __history__ = \
 3.2 (xxxx-xx-xx)
  * hexdump is now packaged as .zip on all platforms
    (on Linux created archive was tar.gz)
+ * .zip is executable! try `python hexdump-3.2.zip`
  * dump() now accepts configurable separator, patch
    by Ian Land (PR #3)
 
@@ -301,9 +302,15 @@ def runtest(logfile=None):
 00000010: 00 11 22 33 44 55 66 77  88 99 0A BB CC DD EE FF  .."3DUfw........\
 '''
 
-
-  import os.path as osp
-  hexfile = osp.dirname(osp.abspath(__file__)) + '/hexfile.bin' 
+  # get path to hexfile.bin
+  # this doesn't work from .zip
+  #   import os.path as osp
+  #   hexfile = osp.dirname(osp.abspath(__file__)) + '/hexfile.bin'
+  # this doesn't work either
+  #   hexfile = osp.dirname(sys.modules[__name__].__file__) + '/hexfile.bin'
+  # this works
+  import pkgutil
+  bin = pkgutil.get_data('hexdump', 'hexfile.bin')
 
   # varios length of input data
   hexdump(b'zzzz'*12)
@@ -315,7 +322,6 @@ def runtest(logfile=None):
   hexdump(b'\x00\x00\x00\x5B\x68\x65\x78\x64\x75\x6D\x70\x5D\x00\x00\x00\x00'
           b'\x00\x11\x22\x33\x44\x55\x66\x77\x88\x99\x0A\xBB\xCC\xDD\xEE\xFF')
   print('---')
-  bin = open(hexfile, 'rb').read()
   # dumping file-like binary object to screen (default behavior)
   hexdump(bin)
   print('return output')
@@ -360,8 +366,17 @@ def runtest(logfile=None):
     assert restore('5B68657864756D705D') == b'[hexdump]', 'no space check failed'
     assert dump(b'\\\xa1\xab\x1e', sep='').lower() == '5ca1ab1e'
 
-  print('---')
-  hexdump(open(hexfile, 'rb'))
+  print('---[test file hexdumping]---')
+
+  import os
+  import tempfile
+  hexfile = tempfile.NamedTemporaryFile(delete=False)
+  try:
+    hexfile.write(bin)
+    hexfile.close()
+    hexdump(open(hexfile.name, 'rb'))
+  finally:
+    os.remove(hexfile.name)
   if logfile:
     sys.stderr, sys.stdout = savedstd
     openlog.close()
