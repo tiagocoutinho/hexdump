@@ -18,11 +18,12 @@ Restore binary from a saved hex dump::
 
 basic API
 =========
-dump(binary, size=2)
+dump(binary, size=2, sep=' ')
 
-   Helper to convert binary data (bytes in Python 3 and
+   Convert binary data (bytes in Python 3 and
    str in Python 2) to string like '00 DE AD BE EF'.
-   `size` argument specifies length of text chunks.
+   `size` argument specifies length of text chunks
+   and `sep` sets chunk separator.
 
 dehex(hextext)
 
