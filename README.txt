@@ -12,8 +12,10 @@ command line
 There are three ways to execute hexdump.py from command line::
 
    $ python hexdump.py
+   $ python hexdump-3.2.zip
+
+   # after installing with `pip install hexdump`
    $ python -m hexdump
-   $ python -m hexdump-3.2.zip
 
 Dump binary data in hex form::
 
