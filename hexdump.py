@@ -330,7 +330,7 @@ def runtest(logfile=None):
   #   hexfile = osp.dirname(sys.modules[__name__].__file__) + '/hexfile.bin'
   # this works
   import pkgutil
-  bin = pkgutil.get_data('hexdump', 'hexfile.bin')
+  bin = pkgutil.get_data('hexdump', 'data/hexfile.bin')
 
   # varios length of input data
   hexdump(b'zzzz'*12)
