@@ -433,6 +433,7 @@ def main():
           hexdump(sys.stdin.buffer)
       else:
         hexdump(open(args[0], 'rb'))
+
     ## restore file
     else:
       # prepare input stream
@@ -457,6 +458,7 @@ if __name__ == '__main__':
   main()
 
 # [x] file restore from command line utility
+# [ ] write dump with LF on Windows for consistency
 # [ ] encoding param for hexdump()ing Python 3 str if anybody requests that
 
 # [ ] document chunking API
