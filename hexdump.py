@@ -23,12 +23,16 @@ Far Manager
 
 """
 
-__version__ = '3.2'
+__version__ = '3.3'
 __author__  = 'anatoly techtonik <techtonik@gmail.com>'
 __license__ = 'Public Domain'
 
 __history__ = \
 """
+3.3 (TBD)
+ * new normalize_py() helper to set sys.stdout to
+   binary mode on Windows
+
 3.2 (2015-07-02)
  * hexdump is now packaged as .zip on all platforms
    (on Linux created archive was tar.gz)
@@ -97,6 +101,20 @@ import sys
 
 # --- constants
 PY3K = sys.version_info >= (3, 0)
+
+# --- workaround against Python consistency issues
+def normalize_py():
+  ''' Problem 001 - sys.stdout in Python is by default opened in
+      text mode, and writes to this stdout produce corrupted binary
+      data on Windows
+
+          python -c "import sys; sys.stdout.write('_\n_')" > file
+          python -c "print(repr(open('file', 'rb').read()))"
+  '''
+  if sys.platform == "win32":
+    # set sys.stdout to binary mode on Windows
+    import os, msvcrt
+    msvcrt.setmode(sys.stdout.fileno(), os.O_BINARY)
 
 # --- - chunking helpers
 def chunks(seq, size):
@@ -408,16 +426,11 @@ def main():
       hexdump(open(args[0], 'rb'))
     else:
       # [ ] memory efficient restore
-      # [x] Python works with stdout in text mode by default, which
-      #     leads to corrupted binary data on Windows
-      #       python -c "import sys; sys.stdout.write('_\n_')" > file
-      #       python -c "print(repr(open('file', 'rb').read()))"
       if PY3K:
         sys.stdout.buffer.write(restore(open(args[0]).read()))
       else:
-        if sys.platform == "win32":
-          import os, msvcrt
-          msvcrt.setmode(sys.stdout.fileno(), os.O_BINARY)
+        # Windows - bibary mode for sys.stdout to prevent data corruption
+        normalize_py()
         sys.stdout.write(restore(open(args[0], 'rb').read()))
 
 if __name__ == '__main__':
