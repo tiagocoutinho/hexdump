@@ -111,7 +111,7 @@ setup(
     ],
 
     py_modules=['hexdump'],
-    data_files=[('', ['hexfile.bin'])],
+    data_files=[('', ['data/hexfile.bin'])],
 
     long_description=get_description('README.txt'),
 
