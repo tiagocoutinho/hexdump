@@ -29,7 +29,7 @@ __license__ = 'Public Domain'
 
 __history__ = \
 """
-3.3 (TBD)
+3.3 (2015-01-22)
  * accept input from sys.stdin if "-" is specified
    for both dump and restore (issue #1)
  * new normalize_py() helper to set sys.stdout to

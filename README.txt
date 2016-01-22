@@ -122,6 +122,12 @@ at https://bitbucket.org/techtonik/hexdump/
 
 ChangeLog
 =========
+3.3 (2015-01-22)
+ * accept input from sys.stdin if "-" is specified
+   for both dump and restore (issue #1)
+ * new normalize_py() helper to set sys.stdout to
+   binary mode on Windows
+
 3.2 (2015-07-02)
  * hexdump is now packaged as .zip on all platforms
    (on Linux created archive was tar.gz)
