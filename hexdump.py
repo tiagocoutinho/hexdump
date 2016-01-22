@@ -30,8 +30,8 @@ __license__ = 'Public Domain'
 __history__ = \
 """
 3.3 (TBD)
- * accept binary input from sys.stdin if "-" is
-   specified (issue #1)
+ * accept input from sys.stdin if "-" is specified
+   for both dump and restore (issue #1)
  * new normalize_py() helper to set sys.stdout to
    binary mode on Windows
 
@@ -435,13 +435,23 @@ def main():
         hexdump(open(args[0], 'rb'))
     ## restore file
     else:
+      # prepare input stream
+      if args[0] == '-':
+        instream = sys.stdin
+      else:
+        if PY3K:
+          instream = open(args[0])
+        else:
+          instream = open(args[0], 'rb')
+
+      # output stream
       # [ ] memory efficient restore
       if PY3K:
-        sys.stdout.buffer.write(restore(open(args[0]).read()))
+        sys.stdout.buffer.write(restore(instream.read()))
       else:
-        # Windows - bibary mode for sys.stdout to prevent data corruption
+        # Windows - binary mode for sys.stdout to prevent data corruption
         normalize_py()
-        sys.stdout.write(restore(open(args[0], 'rb').read()))
+        sys.stdout.write(restore(instream.read()))
 
 if __name__ == '__main__':
   main()
