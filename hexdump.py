@@ -30,6 +30,8 @@ __license__ = 'Public Domain'
 __history__ = \
 """
 3.3 (TBD)
+ * accept binary input from sys.stdin if "-" is
+   specified (issue #1)
  * new normalize_py() helper to set sys.stdout to
    binary mode on Windows
 
@@ -403,7 +405,7 @@ def runtest(logfile=None):
 def main():
   from optparse import OptionParser
   parser = OptionParser(usage='''
-  %prog binfile
+  %prog [binfile|-]
   %prog -r hexfile
   %prog --test [logfile]''', version=__version__)
   parser.add_option('-r', '--restore', action='store_true',
@@ -417,13 +419,21 @@ def main():
       runtest(logfile=args[0])
     else:
       runtest()
-  elif not args:
+  elif not args or len(args) > 1:
     parser.print_help()
     sys.exit(-1)
   else:
+    ## dump file
     if not options.restore:
-      # [x] memory effective dump 
-      hexdump(open(args[0], 'rb'))
+      # [x] memory effective dump
+      if args[0] == '-':
+        if not PY3K:
+          hexdump(sys.stdin)
+        else:
+          hexdump(sys.stdin.buffer)
+      else:
+        hexdump(open(args[0], 'rb'))
+    ## restore file
     else:
       # [ ] memory efficient restore
       if PY3K:
@@ -441,3 +451,4 @@ if __name__ == '__main__':
 
 # [ ] document chunking API
 # [ ] document hexdump API
+# [ ] blog about sys.stdout text mode problem on Windows
