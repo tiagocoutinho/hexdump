@@ -441,7 +441,12 @@ def main():
         instream = sys.stdin
       else:
         if PY3K:
-          instream = open(args[0])
+          # Python 3 opens text files in system default encoding
+          # (which is not utf-8 on Windows) and chokes on missing
+          # points (see Wikipedia for missing points). For bullet
+          # proof file reading I use `cp437` single-byte encoding
+          # without missing points
+          instream = open(args[0], encoding='cp437')
         else:
           instream = open(args[0], 'rb')
 
