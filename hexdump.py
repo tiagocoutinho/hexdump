@@ -257,6 +257,7 @@ def restore(dump):
     raise TypeError('Invalid data for restore')
 
   text = dump.strip()  # ignore surrounding empty lines
+  dumptype = None
   for line in text.split('\n'):
     # strip address part
     addrend = line.find(':')
@@ -265,14 +266,24 @@ def restore(dump):
     line = line.lstrip()
     # check dump type
     if line[2] == ' ':  # 00 00 00 ...  type of dump
-      # check separator
-      sepstart = (2+1)*7+2  # ('00'+' ')*7+'00'
+      # calculate separator position
+      sepstart = (2+1)*8  # ('00'+' ')*8
       sep = line[sepstart:sepstart+3]
-      if sep[:2] == '  ' and sep[2:] != ' ':  # ...00 00  00 00...
+      if sep[0] == ' ' and sep[1] != ' ':
+        # ...00 00  00 00...
+        dumptype = "doublespaced"
         hexdata = line[:bytehexwidth+1]
-      elif sep[2:] == ' ':  # ...00 00 | 00 00...  - Far Manager
-        hexdata = line[:sepstart] + line[sepstart+3:bytehexwidth+2]
-      else:                 # ...00 00 00 00... - Scapy, no separator
+      elif sep[1] == ' ':
+        # ...00 00 | 00 00...  - Far Manager
+        dumptype = "singlebytesep"
+        hexdata = line[:sepstart-1] + line[sepstart+2:bytehexwidth+3]
+      elif sep == '\xe2\x94\x82':
+        # ...00 00 \xe2\x94\x82 00 00...  - Far Manager (utf-8)
+        dumptype = "unicodesep"
+        hexdata = line[:sepstart-1] + line[sepstart+4:bytehexwidth+5]
+      else:
+        # ...00 00 00 00... - Scapy, no separator
+        dumptype = "nosep"
         hexdata = line[:bytehexwidth]
       line = hexdata
     result += dehex(line)
@@ -465,6 +476,9 @@ if __name__ == '__main__':
 # [x] file restore from command line utility
 # [ ] write dump with LF on Windows for consistency
 # [ ] encoding param for hexdump()ing Python 3 str if anybody requests that
+# [ ] report exact line and position if invalid data is found, right now
+#     it is indescriptive "TypeError: Non-hexadecimal digit found"
+#     or "TypeError: Odd-length string"
 
 # [ ] document chunking API
 # [ ] document hexdump API
