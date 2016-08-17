@@ -103,7 +103,7 @@ run self-tests
 Manually::
 
    $ hexdump.py --test output.txt
-   $ diff -u3 hextest.txt output.txt
+   $ diff -u3 data/hextest.txt output.txt
 
 Automatically with `tox`::
 
@@ -195,7 +195,7 @@ Release checklist
 =================
 
 | [ ] run tests  
-| [ ] update version in hexdump.py  
+| [ ] update version in hexdump.py and README.txt
 | [ ] update ChangeLog in README.txt from hexdump.py  
 | [ ] python setup.py register sdist upload  
 
