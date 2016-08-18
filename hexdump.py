@@ -23,12 +23,22 @@ Far Manager
 
 """
 
-__version__ = '3.3'
+__version__ = '3.4dev'
 __author__  = 'anatoly techtonik <techtonik@gmail.com>'
 __license__ = 'Public Domain'
 
 __history__ = \
 """
+3.4 (WIP)
+ * support more dump formats for restore() by better
+   detection of column separator - now dumps with
+   unicode separator U+2502 are also supported
+ * another fix for Python 3, which is too smart -
+   opens dumps in system encoding (which can be any)
+   and fails to read dump if its encoding differs
+ * add restore() testdata for various dump formats
+ * add license file for packagers (issue #3)
+
 3.3 (2015-01-22)
  * accept input from sys.stdin if "-" is specified
    for both dump and restore (issue #1)
